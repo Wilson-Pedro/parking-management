@@ -22,21 +22,21 @@ public class Company {
 	
 	private String phone; 
 	
-	private Integer spacesForMotocycles;
+	private Integer spacesForMotorbikes;
 	
 	private Integer spacesForCars;
 	
 	public Company() {
 	}
 
-	public Company(Long id, String name, String cnpj, Address address, String phone, Integer spacesForMotocycles,
+	public Company(Long id, String name, String cnpj, Address address, String phone, Integer spacesForMotorbikes,
 			Integer spacesForCars) {
 		this.id = id;
 		this.name = name;
 		this.cnpj = cnpj;
 		this.address = address;
 		this.phone = phone;
-		this.spacesForMotocycles = spacesForMotocycles;
+		this.spacesForMotorbikes = spacesForMotorbikes;
 		this.spacesForCars = spacesForCars;
 	}
 
@@ -80,12 +80,12 @@ public class Company {
 		this.phone = phone;
 	}
 
-	public Integer getSpacesForMotocycles() {
-		return spacesForMotocycles;
+	public Integer getSpacesForMotorbikes() {
+		return spacesForMotorbikes;
 	}
 
-	public void setSpacesForMotocycles(Integer spacesForMotocycles) {
-		this.spacesForMotocycles = spacesForMotocycles;
+	public void setSpacesForMotorbikes(Integer spacesForMotorbikes) {
+		this.spacesForMotorbikes = spacesForMotorbikes;
 	}
 
 	public Integer getSpacesForCars() {

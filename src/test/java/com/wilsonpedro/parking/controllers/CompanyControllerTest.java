@@ -3,7 +3,6 @@ package com.wilsonpedro.parking.controllers;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
-import static org.junit.jupiter.api.Assertions.fail;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -71,7 +70,7 @@ class CompanyControllerTest {
 				.andExpect(jsonPath("$.name", equalTo("WS-Tecnology")))
 				.andExpect(jsonPath("$.cnpj", equalTo("14326422000166")))
 				.andExpect(jsonPath("$.phone", equalTo("(95)2256-9123")))
-				.andExpect(jsonPath("$.spacesForMotocycles", equalTo(30)))
+				.andExpect(jsonPath("$.spacesForMotorbikes", equalTo(30)))
 				.andExpect(jsonPath("$.spacesForCars", equalTo(20)));
 		
 		assertEquals(1, companyRepository.count());
@@ -95,7 +94,7 @@ class CompanyControllerTest {
 				.andExpect(jsonPath("$.name", equalTo("WS-Tecnology")))
 				.andExpect(jsonPath("$.cnpj", equalTo("14326422000166")))
 				.andExpect(jsonPath("$.phone", equalTo("(95)2256-9123")))
-				.andExpect(jsonPath("$.spacesForMotocycles", equalTo(30)))
+				.andExpect(jsonPath("$.spacesForMotorbikes", equalTo(30)))
 				.andExpect(jsonPath("$.spacesForCars", equalTo(20)));
 				
 	}

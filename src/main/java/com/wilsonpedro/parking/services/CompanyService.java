@@ -36,7 +36,7 @@ public class CompanyService {
 					companyUpdated.setCnpj(company.getCnpj());
 					companyUpdated.setAddress(company.getAddress());
 					companyUpdated.setPhone(company.getPhone());
-					companyUpdated.setSpacesForMotocycles(company.getSpacesForMotocycles());
+					companyUpdated.setSpacesForMotorbikes(company.getSpacesForMotorbikes());
 					companyUpdated.setSpacesForCars(company.getSpacesForCars());
 					return companyRepository.save(companyUpdated);
 				}).orElseThrow(() -> new EntityNotFoundException());

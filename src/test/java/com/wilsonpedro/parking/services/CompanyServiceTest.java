@@ -48,7 +48,7 @@ class CompanyServiceTest {
 		company.setCnpj("14326422000166");
 		company.setAddress(address);
 		company.setPhone("(95) 3456-7413");
-		company.setSpacesForMotocycles(30);
+		company.setSpacesForMotorbikes(30);
 		company.setSpacesForCars(20);
 		
 		assertEquals(0, this.companyRepository.count());
@@ -81,7 +81,7 @@ class CompanyServiceTest {
 		assertEquals("WS-Tecnology", company.getName());
 		assertEquals("14326422000166", company.getCnpj());
 		assertEquals("(95) 3456-7413", company.getPhone());
-		assertEquals(30, company.getSpacesForMotocycles());
+		assertEquals(30, company.getSpacesForMotorbikes());
 		assertEquals(20, company.getSpacesForCars());
 	}
 	
