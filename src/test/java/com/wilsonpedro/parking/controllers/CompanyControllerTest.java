@@ -95,8 +95,7 @@ class CompanyControllerTest {
 				.andExpect(jsonPath("$.cnpj", equalTo("14326422000166")))
 				.andExpect(jsonPath("$.phone", equalTo("(95)2256-9123")))
 				.andExpect(jsonPath("$.spacesForMotorbikes", equalTo(30)))
-				.andExpect(jsonPath("$.spacesForCars", equalTo(20)));
-				
+				.andExpect(jsonPath("$.spacesForCars", equalTo(20)));	
 	}
 	
 	@Test
