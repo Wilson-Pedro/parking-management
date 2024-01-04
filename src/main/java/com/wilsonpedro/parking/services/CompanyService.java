@@ -5,7 +5,9 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.wilsonpedro.parking.enums.TypeVehicle;
 import com.wilsonpedro.parking.models.Company;
+import com.wilsonpedro.parking.models.Vehicle;
 import com.wilsonpedro.parking.repositories.CompanyRepository;
 
 import jakarta.persistence.EntityNotFoundException;
@@ -15,6 +17,9 @@ public class CompanyService {
 
 	@Autowired
 	private CompanyRepository companyRepository;
+	
+	@Autowired
+	VehicleService vehicleService;
 	
 	public Company save(Company company) {
 		return companyRepository.save(company);
@@ -45,5 +50,20 @@ public class CompanyService {
 	public void delete(Long id) {
 		companyRepository.delete(companyRepository.findById(id)
 				.orElseThrow(() -> new EntityNotFoundException()));
+	}
+
+	public void parkVehicle(Long companyId, Long vehicleId) {
+		Vehicle vehicle = vehicleService.findById(vehicleId);
+		Company company = findById(companyId);
+		
+		company.getVehicles().add(vehicle);
+		
+		if(vehicle.getType().equals(TypeVehicle.CAR)) {
+			company.decrementOneInTheCarSpace();
+		} else if(vehicle.getType().equals(TypeVehicle.MOTORBIKE)){
+			company.decrementOneInTheMotorbikesSpace();
+		}
+		
+		save(company);
 	}
 }

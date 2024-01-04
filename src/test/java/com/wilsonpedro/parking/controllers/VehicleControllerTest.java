@@ -3,7 +3,6 @@ package com.wilsonpedro.parking.controllers;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
-import static org.junit.jupiter.api.Assertions.fail;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -22,9 +21,14 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.wilsonpedro.parking.dtos.ParkDTO;
 import com.wilsonpedro.parking.enums.TypeVehicle;
+import com.wilsonpedro.parking.models.Address;
+import com.wilsonpedro.parking.models.Company;
 import com.wilsonpedro.parking.models.Vehicle;
+import com.wilsonpedro.parking.repositories.AddressRepository;
 import com.wilsonpedro.parking.repositories.VehicleRepository;
+import com.wilsonpedro.parking.services.CompanyService;
 import com.wilsonpedro.parking.services.VehicleService;
 
 @SpringBootTest
@@ -37,6 +41,12 @@ class VehicleControllerTest {
 	
 	@Autowired
 	VehicleRepository vehicleRepository;
+	
+	@Autowired
+	AddressRepository addressRepository;
+	
+	@Autowired
+	CompanyService companyService;
 	
 	@Autowired
 	ObjectMapper objectMapper;
@@ -113,8 +123,39 @@ class VehicleControllerTest {
 		assertEquals("HTJ-1234", vehicleFinded.getPlate());
 	}
 	
+//	@Test
+//	@Order(5)
+//	void mustAddAVehicleToTheParkingSpaceSuccessfully() throws Exception {
+//		
+//		Address address = new Address(null, "96520-190", "Rua das Ameixas", "Flores", "Minas-Gerais");
+//		
+//		Company company = new Company(null, "GG-Tecnology", "14626433000877", address, 
+//				"(95)2776-9001", 30, 20);
+//		
+//		Vehicle vehicle = vehicleService.findById(1L);
+//		
+//		addressRepository.save(address);
+//		companyService.save(company);
+//		
+//		Long empresaId = companyService.findAll().get(0).getId();
+//		
+//		ParkDTO parkDto = new ParkDTO(empresaId);
+//		
+//		String jsonRequest = objectMapper.writeValueAsString(parkDto);
+//		
+//		mockMvc.perform(post("/vehicles/{id}", vehicle.getId())
+//				.contentType(MediaType.APPLICATION_JSON)
+//				.content(jsonRequest))
+//				.andExpect(status().isNoContent());
+//		
+//		Company companyFinded = companyService.findById(empresaId);
+//		
+//		assertEquals(19, companyFinded.getSpacesForCars());
+//		
+//	}
+	
 	@Test
-	@Order(5)
+	@Order(6)
 	void mustDeleteTheVehicleSuccessfully() throws Exception {
 		
 		assertEquals(1, vehicleRepository.count());

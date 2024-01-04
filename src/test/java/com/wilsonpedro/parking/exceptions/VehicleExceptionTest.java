@@ -1,4 +1,4 @@
-package com.wilsonpedro.parking.exceptions.company;
+package com.wilsonpedro.parking.exceptions;
 
 import static org.junit.jupiter.api.Assertions.*;
 

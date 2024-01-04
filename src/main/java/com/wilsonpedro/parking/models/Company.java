@@ -1,9 +1,16 @@
 package com.wilsonpedro.parking.models;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 
 @Entity
@@ -25,6 +32,10 @@ public class Company {
 	private Integer spacesForMotorbikes;
 	
 	private Integer spacesForCars;
+	
+	@JsonIgnore
+	@OneToMany(mappedBy = "company", orphanRemoval = true, cascade = CascadeType.ALL)
+	private List<Vehicle> vehicles = new ArrayList<>();
 	
 	public Company() {
 	}
@@ -94,5 +105,19 @@ public class Company {
 
 	public void setSpacesForCars(Integer spacesForCars) {
 		this.spacesForCars = spacesForCars;
+	}
+
+	public List<Vehicle> getVehicles() {
+		return vehicles;
+	}
+
+	public void decrementOneInTheCarSpace() {
+		spacesForCars -= 1;
+		setSpacesForCars(spacesForCars);
+	}
+	
+	public void decrementOneInTheMotorbikesSpace() {
+		spacesForMotorbikes -= 1;
+		setSpacesForMotorbikes(spacesForMotorbikes);
 	}
 }
