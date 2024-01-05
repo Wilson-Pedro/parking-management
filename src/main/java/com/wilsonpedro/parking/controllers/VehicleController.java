@@ -26,8 +26,8 @@ public class VehicleController {
 	@Autowired
 	private VehicleService vehicleService;
 	
-//	@Autowired
-//	private CompanyService companyService;
+	@Autowired
+	private CompanyService companyService;
 	
 	@PostMapping("/")
 	public ResponseEntity save(@RequestBody Vehicle vehicle) {
@@ -53,11 +53,11 @@ public class VehicleController {
 		return ResponseEntity.ok(vehicleUpdated);
 	}
 	
-//	@PostMapping("/vehicles/{id}")
-//	public ResponseEntity park(@RequestBody ParkDTO parkDTO, @PathVariable Long vehicleId) {
-//		companyService.parkVehicle(parkDTO.getEmpresaId(), vehicleId);
-//		return ResponseEntity.noContent().build();
-//	}
+	@PostMapping("/{id}/park")
+	public ResponseEntity park(@RequestBody ParkDTO parkDTO, @PathVariable("id") Long vehicleId) {
+		companyService.parkVehicle(parkDTO.getCompanyId(), vehicleId);
+		return ResponseEntity.noContent().build();
+	}
 	
 	@DeleteMapping("/{id}")
 	public ResponseEntity delete(@PathVariable Long id) {

@@ -123,36 +123,39 @@ class VehicleControllerTest {
 		assertEquals("HTJ-1234", vehicleFinded.getPlate());
 	}
 	
-//	@Test
-//	@Order(5)
-//	void mustAddAVehicleToTheParkingSpaceSuccessfully() throws Exception {
-//		
-//		Address address = new Address(null, "96520-190", "Rua das Ameixas", "Flores", "Minas-Gerais");
-//		
-//		Company company = new Company(null, "GG-Tecnology", "14626433000877", address, 
-//				"(95)2776-9001", 30, 20);
-//		
-//		Vehicle vehicle = vehicleService.findById(1L);
-//		
-//		addressRepository.save(address);
-//		companyService.save(company);
-//		
-//		Long empresaId = companyService.findAll().get(0).getId();
-//		
-//		ParkDTO parkDto = new ParkDTO(empresaId);
-//		
-//		String jsonRequest = objectMapper.writeValueAsString(parkDto);
-//		
-//		mockMvc.perform(post("/vehicles/{id}", vehicle.getId())
-//				.contentType(MediaType.APPLICATION_JSON)
-//				.content(jsonRequest))
-//				.andExpect(status().isNoContent());
-//		
-//		Company companyFinded = companyService.findById(empresaId);
-//		
-//		assertEquals(19, companyFinded.getSpacesForCars());
-//		
-//	}
+	@Test
+	@Order(5)
+	void mustAddAVehicleToTheParkingSpaceSuccessfully() throws Exception {
+		
+		Address address = new Address(null, "96520-190", "Rua das Ameixas", "Flores", "Minas-Gerais");
+		
+		Company company = new Company(null, "GG-Tecnology", "26826433000977", address, 
+				"(95)2776-9001", 30, 20);
+		
+		Vehicle vehicle = vehicleService.findById(1L);
+		
+		addressRepository.save(address);
+		companyService.save(company);
+		
+		Long empresaId = companyService.findAll().get(0).getId();
+		
+		ParkDTO parkDto = new ParkDTO(empresaId);
+		
+		String jsonRequest = objectMapper.writeValueAsString(parkDto);
+		
+		mockMvc.perform(post("/vehicles/{id}/park", vehicle.getId())
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(jsonRequest))
+				.andExpect(status().isNoContent());
+		
+		Company companyFinded = companyService.findById(empresaId);
+		
+		assertEquals(19, companyFinded.getSpacesForCars());
+		
+		addressRepository.delete(address);
+		companyService.delete(companyFinded.getId());
+		
+	}
 	
 	@Test
 	@Order(6)

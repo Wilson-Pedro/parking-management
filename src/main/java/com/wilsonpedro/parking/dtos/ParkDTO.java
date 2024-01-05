@@ -2,16 +2,20 @@ package com.wilsonpedro.parking.dtos;
 
 public class ParkDTO {
 
-	private Long empresaId;
+	private Long companyId;
 
-	public ParkDTO(Long empresaId) {
+	public ParkDTO() {
 	}
 
-	public Long getEmpresaId() {
-		return empresaId;
+	public ParkDTO(Long companyId) {
+		this.companyId = companyId;
 	}
 
-	public void setEmpresaId(Long empresaId) {
-		this.empresaId = empresaId;
+	public Long getCompanyId() {
+		return companyId;
+	}
+
+	public void setCompanyId(Long companyId) {
+		this.companyId = companyId;
 	}
 }

@@ -11,6 +11,7 @@ import com.wilsonpedro.parking.models.Vehicle;
 import com.wilsonpedro.parking.repositories.CompanyRepository;
 
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.transaction.Transactional;
 
 @Service
 public class CompanyService {
@@ -52,6 +53,7 @@ public class CompanyService {
 				.orElseThrow(() -> new EntityNotFoundException()));
 	}
 
+	@Transactional
 	public void parkVehicle(Long companyId, Long vehicleId) {
 		Vehicle vehicle = vehicleService.findById(vehicleId);
 		Company company = findById(companyId);
