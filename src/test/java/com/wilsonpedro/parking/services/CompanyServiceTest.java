@@ -131,11 +131,11 @@ class CompanyServiceTest {
 	@Order(6)
 	void mustDeleteTheCompanySuccessfully() {
 		
-		Long id = companyService.findAll().get(0).getId();
+		Long companyId = companyService.findAll().get(0).getId();
 		
 		assertEquals(1, companyRepository.count());
 		
-		this.companyService.delete(id);
+		this.companyService.delete(companyId);
 		
 		assertEquals(0, companyRepository.count());
 	}

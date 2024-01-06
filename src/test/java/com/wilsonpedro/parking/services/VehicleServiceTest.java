@@ -14,8 +14,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import com.wilsonpedro.parking.enums.TypeVehicle;
-import com.wilsonpedro.parking.models.Address;
-import com.wilsonpedro.parking.models.Company;
 import com.wilsonpedro.parking.models.Vehicle;
 import com.wilsonpedro.parking.repositories.AddressRepository;
 import com.wilsonpedro.parking.repositories.VehicleRepository;
