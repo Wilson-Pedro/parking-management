@@ -1,6 +1,7 @@
 package com.wilsonpedro.parking.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.wilsonpedro.parking.dtos.AddressDTO;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -31,13 +32,22 @@ public class Address {
 	
 	public Address() {
 	}
-
+	
 	public Address(Long id, String cep, String street, String neighborhood, String city) {
 		this.id = id;
 		this.cep = cep;
 		this.street = street;
 		this.neighborhood = neighborhood;
 		this.city = city;
+	}
+
+
+
+	public Address(AddressDTO addressDTO) {
+		cep = addressDTO.getCep();
+		street = addressDTO.getStreet();
+		neighborhood = addressDTO.getNeighborhood();
+		city = addressDTO.getCity();
 	}
 
 	public Long getId() {

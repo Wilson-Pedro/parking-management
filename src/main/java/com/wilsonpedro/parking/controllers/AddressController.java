@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.wilsonpedro.parking.dtos.AddressDTO;
 import com.wilsonpedro.parking.models.Address;
 import com.wilsonpedro.parking.services.AddressService;
 
@@ -25,8 +26,8 @@ public class AddressController {
 	private AddressService addressService;
 	
 	@PostMapping("/")
-	public ResponseEntity save(@RequestBody Address address) {
-		Address addressSaved = addressService.save(address);
+	public ResponseEntity save(@RequestBody AddressDTO addressDTO) {
+		Address addressSaved = addressService.save(addressDTO);
 		return ResponseEntity.status(HttpStatus.CREATED).body(addressSaved);
 	}
 	
@@ -43,8 +44,8 @@ public class AddressController {
 	}
 	
 	@PutMapping("/{id}")
-	public ResponseEntity update(@RequestBody Address address, @PathVariable Long id) {
-		Address addressUpdated = addressService.update(address, id);
+	public ResponseEntity update(@RequestBody AddressDTO addressDTO, @PathVariable Long id) {
+		Address addressUpdated = addressService.update(addressDTO, id);
 		return ResponseEntity.ok().body(addressUpdated);
 	}
 	

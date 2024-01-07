@@ -6,7 +6,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import com.wilsonpedro.parking.models.Address;
+import com.wilsonpedro.parking.dtos.AddressDTO;
 import com.wilsonpedro.parking.services.AddressService;
 
 import jakarta.persistence.EntityNotFoundException;
@@ -26,9 +26,9 @@ class AddressExceptionTest {
 	@Test
 	void EntityNotFoundExceptionWhenTryingToUpdateAddress() {
 		
-		Address address = new Address(70L, "52220-251", "Rua das Ameixas", "Flores", "Minas-Gerais");
+		AddressDTO addressDTO = new AddressDTO("52220-251", "Rua das Ameixas", "Flores", "Minas-Gerais");
 		
-		assertThrows(EntityNotFoundException.class, () -> addressService.update(address, 70L));
+		assertThrows(EntityNotFoundException.class, () -> addressService.update(addressDTO, 70L));
 	}
 
 	@Test

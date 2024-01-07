@@ -13,6 +13,7 @@ import org.junit.jupiter.api.TestMethodOrder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import com.wilsonpedro.parking.dtos.AddressDTO;
 import com.wilsonpedro.parking.models.Address;
 import com.wilsonpedro.parking.repositories.AddressRepository;
 
@@ -32,17 +33,16 @@ class AddressServiceTest {
 		
 		addressRepository.deleteAll();
 		
-		Address address = new Address();
-		address.setId(null);
-		address.setCep("80120-111");
-		address.setStreet("Rua das Ameixas");
-		address.setNeighborhood("Flores");
-		address.setCity("Minas-Gerais");
+		AddressDTO addressDTO = new AddressDTO();
+		addressDTO.setId(null);
+		addressDTO.setCep("80120-111");
+		addressDTO.setStreet("Rua das Ameixas");
+		addressDTO.setNeighborhood("Flores");
+		addressDTO.setCity("Minas-Gerais");
 		
 		assertEquals(0, this.addressRepository.count());
 		
-		addressRepository.save(address);
-		Address addressSaved = this.addressService.save(address);
+		Address addressSaved = this.addressService.save(addressDTO);
 		
 		assertNotNull(addressSaved.getId());
 		assertEquals(1, this.addressRepository.count());
@@ -85,7 +85,9 @@ class AddressServiceTest {
 		assertNotEquals("Rua das Maçãs", address.getStreet());
 		address.setStreet("Rua das Maçãs");
 		
-		Address addressUpdated = addressService.update(address, id);
+		AddressDTO addressDTO = new AddressDTO(address);
+		
+		Address addressUpdated = addressService.update(addressDTO, id);
 		
 		assertEquals("Rua das Maçãs", addressUpdated.getStreet());
 	}
