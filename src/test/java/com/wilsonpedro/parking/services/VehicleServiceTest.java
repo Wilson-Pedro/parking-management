@@ -13,6 +13,7 @@ import org.junit.jupiter.api.TestMethodOrder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import com.wilsonpedro.parking.dtos.VehicleDTO;
 import com.wilsonpedro.parking.enums.TypeVehicle;
 import com.wilsonpedro.parking.models.Vehicle;
 import com.wilsonpedro.parking.repositories.AddressRepository;
@@ -35,17 +36,17 @@ class VehicleServiceTest {
 	@Order(1)
 	void mustSaveTheVehicleSuccessfully() {
 		
-		Vehicle vehicle = new Vehicle();
-		vehicle.setId(null);
-		vehicle.setBrand("Chevrolet");
-		vehicle.setModel("Onix");
-		vehicle.setColor("Red");
-		vehicle.setPlate("HZN-8845");
-		vehicle.setType(TypeVehicle.CAR);
+		VehicleDTO vehicleDTO = new VehicleDTO();
+		vehicleDTO.setId(null);
+		vehicleDTO.setBrand("Chevrolet");
+		vehicleDTO.setModel("Onix");
+		vehicleDTO.setColor("Red");
+		vehicleDTO.setPlate("HZN-8845");
+		vehicleDTO.setType("Car");
 		
 		assertEquals(0, vehicleRepository.count());
 		
-		Vehicle vehicleSaved = vehicleService.save(vehicle);
+		Vehicle vehicleSaved = vehicleService.save(vehicleDTO);
 		
 		assertNotNull(vehicleSaved.getId());
 		assertEquals(1, vehicleRepository.count());	
@@ -89,7 +90,9 @@ class VehicleServiceTest {
 		assertNotEquals("MTJ-7577", vehicle.getPlate());
 		vehicle.setPlate("MTJ-7577");
 		
-		Vehicle vehicleUpdated = vehicleService.update(vehicle, id);
+		VehicleDTO vehicleDTO = new VehicleDTO(vehicle);
+		
+		Vehicle vehicleUpdated = vehicleService.update(vehicleDTO, id);
 		
 		assertEquals("MTJ-7577", vehicleUpdated.getPlate());
 	}

@@ -1,13 +1,13 @@
 package com.wilsonpedro.parking.exceptions;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import com.wilsonpedro.parking.dtos.VehicleDTO;
 import com.wilsonpedro.parking.enums.TypeVehicle;
-import com.wilsonpedro.parking.models.Vehicle;
 import com.wilsonpedro.parking.services.VehicleService;
 
 import jakarta.persistence.EntityNotFoundException;
@@ -27,9 +27,9 @@ class VehicleExceptionTest {
 	@Test
 	void EntityNotFoundExceptionWhenTryingToUpdateVehicle() {
 		
-		Vehicle vehicle = new Vehicle(1L, "Chevrolet", "Onix", "Red", "MTJ-7577", TypeVehicle.CAR);
+		VehicleDTO vehicleDTO = new VehicleDTO("Chevrolet", "Onix", "Red", "MTJ-7577", "Car");
 		
-		assertThrows(EntityNotFoundException.class, () -> vehicleService.update(vehicle, 70L));
+		assertThrows(EntityNotFoundException.class, () -> vehicleService.update(vehicleDTO, 70L));
 	}
 	
 	@Test

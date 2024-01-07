@@ -22,12 +22,10 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.wilsonpedro.parking.dtos.AddressDTO;
 import com.wilsonpedro.parking.models.Address;
-import com.wilsonpedro.parking.models.Company;
 import com.wilsonpedro.parking.repositories.AddressRepository;
-import com.wilsonpedro.parking.repositories.CompanyRepository;
 import com.wilsonpedro.parking.services.AddressService;
-import com.wilsonpedro.parking.services.CompanyService;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -52,9 +50,9 @@ class AddressControllerTest {
 		
 		addressRepository.deleteAll();
 		
-		Address address = new Address(null, "54320-151", "Rua das Ameixas", "Flores", "Minas-Gerais");
+		AddressDTO addressDTO = new AddressDTO("54320-151", "Rua das Ameixas", "Flores", "Minas-Gerais");
 		
-		String jsonRequest = objectMapper.writeValueAsString(address);
+		String jsonRequest = objectMapper.writeValueAsString(addressDTO);
 		
 		assertEquals(0, addressRepository.count());
 		
@@ -105,7 +103,7 @@ class AddressControllerTest {
 		
 		assertNotEquals("Rua das Laranjas", address.getStreet());
 		
-		Address addressUpdated = new Address(id, "52220-251", "Rua das Laranjas", "Flores", "Minas-Gerais");
+		AddressDTO addressUpdated = new AddressDTO("52220-251", "Rua das Laranjas", "Flores", "Minas-Gerais");
 		
 		String jsonRequest = objectMapper.writeValueAsString(addressUpdated);
 		

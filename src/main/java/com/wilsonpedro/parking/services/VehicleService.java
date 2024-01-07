@@ -5,6 +5,8 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.wilsonpedro.parking.dtos.VehicleDTO;
+import com.wilsonpedro.parking.enums.TypeVehicle;
 import com.wilsonpedro.parking.models.Vehicle;
 import com.wilsonpedro.parking.repositories.VehicleRepository;
 
@@ -16,8 +18,8 @@ public class VehicleService {
 	@Autowired
 	private VehicleRepository vehicleRepository;
 	
-	public Vehicle save(Vehicle vehicle) {
-		return vehicleRepository.save(vehicle);
+	public Vehicle save(VehicleDTO vehicleDTO) {
+		return vehicleRepository.save(new Vehicle(vehicleDTO));
 	}
 	 
 	public List<Vehicle> findAll() {
@@ -29,15 +31,15 @@ public class VehicleService {
 				.orElseThrow(() -> new EntityNotFoundException());
 	}
 
-	public Vehicle update(Vehicle vehicle, Long id) {
+	public Vehicle update(VehicleDTO vehicleDTO, Long id) {
 		return vehicleRepository.findById(id)
 				.map(vehicleUpdated -> {
 					vehicleUpdated.setId(id);
-					vehicleUpdated.setBrand(vehicle.getBrand());
-					vehicleUpdated.setModel(vehicle.getModel());
-					vehicleUpdated.setColor(vehicle.getColor());
-					vehicleUpdated.setPlate(vehicle.getPlate());
-					vehicleUpdated.setType(vehicle.getType());
+					vehicleUpdated.setBrand(vehicleDTO.getBrand());
+					vehicleUpdated.setModel(vehicleDTO.getModel());
+					vehicleUpdated.setColor(vehicleDTO.getColor());
+					vehicleUpdated.setPlate(vehicleDTO.getPlate());
+					vehicleUpdated.setType(TypeVehicle.toEnum(vehicleDTO.getType()));
 					return vehicleRepository.save(vehicleUpdated);
 				}).orElseThrow(() -> new EntityNotFoundException());
 	}

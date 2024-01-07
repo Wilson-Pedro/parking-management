@@ -19,6 +19,7 @@ import com.wilsonpedro.parking.models.Company;
 import com.wilsonpedro.parking.models.Vehicle;
 import com.wilsonpedro.parking.repositories.AddressRepository;
 import com.wilsonpedro.parking.repositories.CompanyRepository;
+import com.wilsonpedro.parking.repositories.VehicleRepository;
 
 import jakarta.transaction.Transactional;
 
@@ -36,7 +37,7 @@ class CompanyServiceTest {
 	AddressRepository addressRepository;
 	
 	@Autowired
-	VehicleService vehicleService;
+	VehicleRepository vehicleRepository;
 
 	@Test
 	@Order(1)
@@ -120,7 +121,7 @@ class CompanyServiceTest {
 		Vehicle vehicle = new Vehicle(1L, "Chevrolet", "Onix", "Red", "DGL-1488", TypeVehicle.CAR);
 		Company company = this.companyService.findById(id);
 		
-		vehicleService.save(vehicle);
+		vehicleRepository.save(vehicle);
 		companyService.parkVehicle(company.getId(), vehicle.getId());
 		
 		assertEquals(19, company.getSpacesForCars());

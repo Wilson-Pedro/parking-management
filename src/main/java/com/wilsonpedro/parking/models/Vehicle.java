@@ -1,5 +1,6 @@
 package com.wilsonpedro.parking.models;
 
+import com.wilsonpedro.parking.dtos.VehicleDTO;
 import com.wilsonpedro.parking.enums.TypeVehicle;
 
 import jakarta.persistence.Entity;
@@ -36,6 +37,15 @@ public class Vehicle {
 		this.color = color;
 		this.plate = plate;
 		this.type = type;
+	}
+	
+	public Vehicle(VehicleDTO vehicleDTO) {
+		id = vehicleDTO.getId();
+		brand = vehicleDTO.getBrand();
+		model = vehicleDTO.getModel();
+		color = vehicleDTO.getColor();
+		plate = vehicleDTO.getPlate();
+		type = TypeVehicle.toEnum(vehicleDTO.getType());
 	}
 
 	public Long getId() {

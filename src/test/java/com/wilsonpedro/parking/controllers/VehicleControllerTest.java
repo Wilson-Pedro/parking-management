@@ -22,6 +22,7 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.wilsonpedro.parking.dtos.ParkDTO;
+import com.wilsonpedro.parking.dtos.VehicleDTO;
 import com.wilsonpedro.parking.enums.TypeVehicle;
 import com.wilsonpedro.parking.models.Address;
 import com.wilsonpedro.parking.models.Company;
@@ -58,9 +59,9 @@ class VehicleControllerTest {
 	@Order(1)
 	void mustSaveTheVehcileSuccessfully() throws Exception {
 		
-		Vehicle vehicle = new Vehicle(1L, "Chevrolet", "Onix", "Red", "MTJ-7577", TypeVehicle.CAR);
+		VehicleDTO vehicleDTO = new VehicleDTO("Chevrolet", "Onix", "Red", "MTJ-7577", "Car");
 		
-		String jsonRequest = objectMapper.writeValueAsString(vehicle);
+		String jsonRequest = objectMapper.writeValueAsString(vehicleDTO);
 		
 		assertEquals(0, vehicleRepository.count());
 		
@@ -108,7 +109,7 @@ class VehicleControllerTest {
 		
 		assertNotEquals("HTJ-1234", vehicle.getPlate());
 		
-		Vehicle vehicleUpdated = new Vehicle(1L, "Chevrolet", "Onix", "Red", "HTJ-1234", TypeVehicle.CAR);
+		VehicleDTO vehicleUpdated = new VehicleDTO("Chevrolet", "Onix", "Red", "HTJ-1234", "Car");
 		
 		String jsonRequest = objectMapper.writeValueAsString(vehicleUpdated);
 		

@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.wilsonpedro.parking.dtos.ParkDTO;
+import com.wilsonpedro.parking.dtos.VehicleDTO;
 import com.wilsonpedro.parking.models.Vehicle;
 import com.wilsonpedro.parking.services.CompanyService;
 import com.wilsonpedro.parking.services.VehicleService;
@@ -30,8 +31,8 @@ public class VehicleController {
 	private CompanyService companyService;
 	
 	@PostMapping("/")
-	public ResponseEntity save(@RequestBody Vehicle vehicle) {
-		Vehicle vehicleSaved = vehicleService.save(vehicle);
+	public ResponseEntity save(@RequestBody VehicleDTO vehicleDTO) {
+		Vehicle vehicleSaved = vehicleService.save(vehicleDTO);
 		return ResponseEntity.status(HttpStatus.CREATED).body(vehicleSaved);
 	}
 	
@@ -48,8 +49,8 @@ public class VehicleController {
 	}
 	
 	@PutMapping("/{id}")
-	public ResponseEntity update(@RequestBody Vehicle vehicle, @PathVariable Long id) {
-		Vehicle vehicleUpdated = vehicleService.update(vehicle, id);
+	public ResponseEntity update(@RequestBody VehicleDTO vehicleDTO, @PathVariable Long id) {
+		Vehicle vehicleUpdated = vehicleService.update(vehicleDTO, id);
 		return ResponseEntity.ok(vehicleUpdated);
 	}
 	
