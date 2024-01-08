@@ -2,8 +2,11 @@ package com.wilsonpedro.parking.models;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.wilsonpedro.parking.dtos.CompanyInputDTO;
+import com.wilsonpedro.parking.dtos.CompanyMinDTO;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
@@ -49,6 +52,22 @@ public class Company {
 		this.phone = phone;
 		this.spacesForMotorbikes = spacesForMotorbikes;
 		this.spacesForCars = spacesForCars;
+	}
+	
+	public Company(CompanyMinDTO companyMinDTO) {
+		name = companyMinDTO.getName();
+		cnpj = companyMinDTO.getCnpj();
+		phone = companyMinDTO.getPhone();
+		spacesForMotorbikes = companyMinDTO.getSpacesForMotorbikes();
+		spacesForCars = companyMinDTO.getSpacesForCars();
+	}
+	
+	public Company(CompanyInputDTO companyInputDTO) {
+		name = companyInputDTO.getName();
+		cnpj = companyInputDTO.getCnpj();
+		phone = companyInputDTO.getPhone();
+		spacesForMotorbikes = companyInputDTO.getSpacesForMotorbikes();
+		spacesForCars = companyInputDTO.getSpacesForCars();
 	}
 
 	public Long getId() {
@@ -119,5 +138,22 @@ public class Company {
 	public void decrementOneInTheMotorbikesSpace() {
 		spacesForMotorbikes -= 1;
 		setSpacesForMotorbikes(spacesForMotorbikes);
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(id);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Company other = (Company) obj;
+		return Objects.equals(id, other.id);
 	}
 }

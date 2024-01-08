@@ -23,9 +23,11 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.wilsonpedro.parking.dtos.AddressDTO;
+import com.wilsonpedro.parking.dtos.CompanyInputDTO;
 import com.wilsonpedro.parking.models.Address;
 import com.wilsonpedro.parking.repositories.AddressRepository;
 import com.wilsonpedro.parking.services.AddressService;
+import com.wilsonpedro.parking.services.CompanyService;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -43,6 +45,9 @@ class AddressControllerTest {
 	
 	@Autowired
 	AddressRepository addressRepository;
+	
+	@Autowired
+	CompanyService companyService;
 
 	@Test
 	@Order(1)
@@ -50,7 +55,15 @@ class AddressControllerTest {
 		
 		addressRepository.deleteAll();
 		
-		AddressDTO addressDTO = new AddressDTO("54320-151", "Rua das Ameixas", "Flores", "Minas-Gerais");
+		CompanyInputDTO companyInputDto = new CompanyInputDTO("WS-Tecnology", "14326422000166", 
+				"(95)2256-9123", 30, 20);
+		
+		companyService.save(companyInputDto);
+		
+		Long companyId = companyService.findAll().get(0).getId();
+		
+		
+		AddressDTO addressDTO = new AddressDTO("54320-151", "Rua das Ameixas", "Flores", "Minas-Gerais", companyId);
 		
 		String jsonRequest = objectMapper.writeValueAsString(addressDTO);
 		
@@ -103,7 +116,9 @@ class AddressControllerTest {
 		
 		assertNotEquals("Rua das Laranjas", address.getStreet());
 		
-		AddressDTO addressUpdated = new AddressDTO("52220-251", "Rua das Laranjas", "Flores", "Minas-Gerais");
+		Long companyId = companyService.findAll().get(0).getId();
+		
+		AddressDTO addressUpdated = new AddressDTO("52220-251", "Rua das Laranjas", "Flores", "Minas-Gerais", companyId);
 		
 		String jsonRequest = objectMapper.writeValueAsString(addressUpdated);
 		

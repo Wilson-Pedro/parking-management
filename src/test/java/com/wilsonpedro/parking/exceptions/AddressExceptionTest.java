@@ -26,7 +26,7 @@ class AddressExceptionTest {
 	@Test
 	void EntityNotFoundExceptionWhenTryingToUpdateAddress() {
 		
-		AddressDTO addressDTO = new AddressDTO("52220-251", "Rua das Ameixas", "Flores", "Minas-Gerais");
+		AddressDTO addressDTO = new AddressDTO("52220-251", "Rua das Ameixas", "Flores", "Minas-Gerais", 1L);
 		
 		assertThrows(EntityNotFoundException.class, () -> addressService.update(addressDTO, 70L));
 	}

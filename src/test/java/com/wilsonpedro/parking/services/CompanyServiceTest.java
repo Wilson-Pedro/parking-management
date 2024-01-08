@@ -43,6 +43,8 @@ class CompanyServiceTest {
 	@Order(1)
 	void mustSaveTheCompanySuccessfully() {
 		
+		companyRepository.deleteAll();
+		
 		Address address = new Address();
 		address.setId(null);
 		address.setCep("54320-151");

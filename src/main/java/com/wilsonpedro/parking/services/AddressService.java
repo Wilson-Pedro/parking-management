@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import com.wilsonpedro.parking.dtos.AddressDTO;
 import com.wilsonpedro.parking.models.Address;
+import com.wilsonpedro.parking.models.Company;
 import com.wilsonpedro.parking.repositories.AddressRepository;
 
 import jakarta.persistence.EntityNotFoundException;
@@ -17,8 +18,19 @@ public class AddressService {
 	@Autowired
 	private AddressRepository addressRepository;
 	
+	@Autowired
+	private CompanyService companyService;
+	
 	public Address save(AddressDTO addressDto) {
-		return addressRepository.save(new Address(addressDto));
+		Address address = toEntity(addressDto);
+		return addressRepository.save(address);
+	}
+
+	private Address toEntity(AddressDTO addressDto) {
+		Company company = companyService.findById(addressDto.getCompanyId());
+		Address address = new Address(addressDto);
+		address.setCompany(company);
+		return address;
 	}
 
 	public List<Address> findAll() {

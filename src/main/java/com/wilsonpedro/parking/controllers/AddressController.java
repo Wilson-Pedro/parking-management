@@ -28,6 +28,7 @@ public class AddressController {
 	@PostMapping("/")
 	public ResponseEntity save(@RequestBody AddressDTO addressDTO) {
 		Address addressSaved = addressService.save(addressDTO);
+		
 		return ResponseEntity.status(HttpStatus.CREATED).body(addressSaved);
 	}
 	

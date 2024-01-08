@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.wilsonpedro.parking.dtos.CompanyInputDTO;
 import com.wilsonpedro.parking.enums.TypeVehicle;
 import com.wilsonpedro.parking.models.Company;
 import com.wilsonpedro.parking.models.Vehicle;
@@ -24,8 +25,20 @@ public class CompanyService {
 	
 	public Company save(Company company) {
 		return companyRepository.save(company);
+	} 
+	
+	public Company save(CompanyInputDTO companyInputDTO) {
+		Company company = new Company(companyInputDTO);
+		return save(company);
 	}
 	
+//	private Company toEntity(CompanyMinDTO companyMinDTO) {
+//		Address address = addressService.findById(companyMinDTO.getAddressId());
+//		Company company = new Company(companyMinDTO);
+//		company.setAddress(address);
+//		return company;
+//	}
+
 	public List<Company> findAll() {
 		return companyRepository.findAll();
 	}
@@ -44,7 +57,7 @@ public class CompanyService {
 					companyUpdated.setPhone(company.getPhone());
 					companyUpdated.setSpacesForMotorbikes(company.getSpacesForMotorbikes());
 					companyUpdated.setSpacesForCars(company.getSpacesForCars());
-					return companyRepository.save(companyUpdated);
+					return save(companyUpdated);
 				}).orElseThrow(() -> new EntityNotFoundException());
 	}
 	

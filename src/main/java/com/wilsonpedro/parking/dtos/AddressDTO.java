@@ -13,23 +13,27 @@ public class AddressDTO {
 	private String neighborhood;
 	
 	private String city;
+	
+	private Long companyId;
 
 	public AddressDTO() {
 	}
-
-	public AddressDTO(String cep, String street, String neighborhood, String city) {
+	
+	public AddressDTO(String cep, String street, String neighborhood, String city, Long companyId) {
 		this.cep = cep;
 		this.street = street;
 		this.neighborhood = neighborhood;
 		this.city = city;
+		this.companyId = companyId;
 	}
-	
+
 	public AddressDTO(Address address) {
 		id = address.getId();
 		cep = address.getCep();
 		street = address.getStreet();
 		neighborhood = address.getNeighborhood();
 		city = address.getCity();
+		companyId = address.getCompany().getId();
 	}
 
 	public Long getId() {
@@ -70,5 +74,13 @@ public class AddressDTO {
 
 	public void setCity(String city) {
 		this.city = city;
+	}
+
+	public Long getCompanyId() {
+		return companyId;
+	}
+
+	public void setCompanyId(Long companyId) {
+		this.companyId = companyId;
 	}
 }

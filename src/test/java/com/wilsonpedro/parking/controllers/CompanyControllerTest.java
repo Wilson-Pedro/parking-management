@@ -22,6 +22,8 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.wilsonpedro.parking.dtos.CompanyInputDTO;
+import com.wilsonpedro.parking.dtos.CompanyMinDTO;
 import com.wilsonpedro.parking.models.Address;
 import com.wilsonpedro.parking.models.Company;
 import com.wilsonpedro.parking.repositories.AddressRepository;
@@ -52,6 +54,8 @@ class CompanyControllerTest {
 	@Order(1)
 	void mustSaveTheCompanySuccessfully() throws Exception{
 		
+		companyRepository.deleteAll();
+		
 		Address address = new Address(null, "54320-151", "Rua das Ameixas", "Flores", "Minas-Gerais");
 		
 		addressRepository.save(address);
@@ -59,7 +63,9 @@ class CompanyControllerTest {
 		Company company = new Company(null, "WS-Tecnology", "14326422000166", address, 
 				"(95)2256-9123", 30, 20);
 		
-		String jsonRequest = objectMapper.writeValueAsString(company);
+		CompanyInputDTO inputDTO = new CompanyInputDTO(company);
+		
+		String jsonRequest = objectMapper.writeValueAsString(inputDTO);
 		
 		assertEquals(0, companyRepository.count());
 		

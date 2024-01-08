@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import com.wilsonpedro.parking.dtos.AddressDTO;
+import com.wilsonpedro.parking.dtos.CompanyInputDTO;
 import com.wilsonpedro.parking.models.Address;
 import com.wilsonpedro.parking.repositories.AddressRepository;
 
@@ -27,11 +28,21 @@ class AddressServiceTest {
 	@Autowired
 	AddressRepository addressRepository;
 	
+	@Autowired
+	CompanyService companyService;
+	
 	@Test
 	@Order(1)
 	void mustSaveTheAddressSuccessfully() {
 		
 		addressRepository.deleteAll();
+		
+		CompanyInputDTO companyInputDto = new CompanyInputDTO("WS-Tecnology", "14326422000166", 
+				"(95)2256-9123", 30, 20);
+		
+		companyService.save(companyInputDto);
+		
+		Long companyId = companyService.findAll().get(0).getId();
 		
 		AddressDTO addressDTO = new AddressDTO();
 		addressDTO.setId(null);
@@ -39,6 +50,7 @@ class AddressServiceTest {
 		addressDTO.setStreet("Rua das Ameixas");
 		addressDTO.setNeighborhood("Flores");
 		addressDTO.setCity("Minas-Gerais");
+		addressDTO.setCompanyId(companyId);
 		
 		assertEquals(0, this.addressRepository.count());
 		
