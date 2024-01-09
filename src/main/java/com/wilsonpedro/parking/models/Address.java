@@ -43,8 +43,6 @@ public class Address {
 		this.city = city;
 	}
 
-
-
 	public Address(AddressDTO addressDTO) {
 		cep = addressDTO.getCep();
 		street = addressDTO.getStreet();

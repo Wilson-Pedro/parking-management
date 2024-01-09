@@ -27,7 +27,7 @@ class VehicleExceptionTest {
 	@Test
 	void EntityNotFoundExceptionWhenTryingToUpdateVehicle() {
 		
-		VehicleDTO vehicleDTO = new VehicleDTO("Chevrolet", "Onix", "Red", "MTJ-7577", "Car");
+		VehicleDTO vehicleDTO = new VehicleDTO("Chevrolet", "Onix", "Red", "MTJ-7577", "Car", "Parked");
 		
 		assertThrows(EntityNotFoundException.class, () -> vehicleService.update(vehicleDTO, 70L));
 	}

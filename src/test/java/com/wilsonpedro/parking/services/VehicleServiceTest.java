@@ -43,6 +43,7 @@ class VehicleServiceTest {
 		vehicleDTO.setColor("Red");
 		vehicleDTO.setPlate("HZN-8845");
 		vehicleDTO.setType("Car");
+		vehicleDTO.setStatus("Parked");
 		
 		assertEquals(0, vehicleRepository.count());
 		

@@ -14,9 +14,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.wilsonpedro.parking.dtos.CompanyDTO;
 import com.wilsonpedro.parking.dtos.CompanyInputDTO;
-import com.wilsonpedro.parking.dtos.CompanyMinDTO;
 import com.wilsonpedro.parking.models.Company;
 import com.wilsonpedro.parking.services.CompanyService;
 

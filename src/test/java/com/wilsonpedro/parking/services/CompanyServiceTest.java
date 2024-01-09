@@ -6,6 +6,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import java.util.List;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
@@ -14,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import com.wilsonpedro.parking.enums.TypeVehicle;
+import com.wilsonpedro.parking.enums.VehicleStatus;
 import com.wilsonpedro.parking.models.Address;
 import com.wilsonpedro.parking.models.Company;
 import com.wilsonpedro.parking.models.Vehicle;
@@ -38,6 +40,13 @@ class CompanyServiceTest {
 	
 	@Autowired
 	VehicleRepository vehicleRepository;
+	
+	Vehicle vehicle;
+	
+	@BeforeEach
+	void setup() {
+		vehicle = new Vehicle(1L, "Chevrolet", "Onix", "Red", "DGL-1488", TypeVehicle.CAR, VehicleStatus.UNDEFINED);
+	}
 
 	@Test
 	@Order(1)
@@ -120,7 +129,6 @@ class CompanyServiceTest {
 		
 		Long id = companyService.findAll().get(0).getId();
 		
-		Vehicle vehicle = new Vehicle(1L, "Chevrolet", "Onix", "Red", "DGL-1488", TypeVehicle.CAR);
 		Company company = this.companyService.findById(id);
 		
 		vehicleRepository.save(vehicle);
@@ -131,7 +139,29 @@ class CompanyServiceTest {
 	}
 	
 	@Test
-	@Order(6)
+	@Order(6) 
+	void mustRemoveAVehicleToTheParkingSpaceSuccessfully() {
+		
+		Long id = companyService.findAll().get(0).getId();
+		
+		//Vehicle vehicle = new Vehicle(null, "Chevrolet", "Onix", "Red", "DGL-1488", TypeVehicle.CAR, VehicleStatus.UNDEFINED);
+		Company company = this.companyService.findById(id);
+		vehicle.setCompany(company);
+		
+		vehicleRepository.save(vehicle);
+		
+		assertNotEquals(vehicle.getStatus(), VehicleStatus.NOT_PARKED);
+		
+		//Long vehicleId = vehicleRepository.findAll().get(0).getId();
+		
+		companyService.notParkVehicle(vehicle.getId());
+		
+		//assertEquals(vehicleFinded.getStatus(), VehicleStatus.NOT_PARKED);
+		assertEquals(20, company.getSpacesForCars());
+	}
+	
+	@Test
+	@Order(7)
 	void mustDeleteTheCompanySuccessfully() {
 		
 		Long companyId = companyService.findAll().get(0).getId();

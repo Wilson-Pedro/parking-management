@@ -10,6 +10,7 @@ import com.wilsonpedro.parking.enums.TypeVehicle;
 import com.wilsonpedro.parking.models.Company;
 import com.wilsonpedro.parking.models.Vehicle;
 import com.wilsonpedro.parking.repositories.CompanyRepository;
+import com.wilsonpedro.parking.repositories.VehicleRepository;
 
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
@@ -23,6 +24,10 @@ public class CompanyService {
 	@Autowired
 	VehicleService vehicleService;
 	
+	@Autowired
+	VehicleRepository vehicleRepository;
+	
+	@Transactional
 	public Company save(Company company) {
 		return companyRepository.save(company);
 	} 
@@ -31,13 +36,6 @@ public class CompanyService {
 		Company company = new Company(companyInputDTO);
 		return save(company);
 	}
-	
-//	private Company toEntity(CompanyMinDTO companyMinDTO) {
-//		Address address = addressService.findById(companyMinDTO.getAddressId());
-//		Company company = new Company(companyMinDTO);
-//		company.setAddress(address);
-//		return company;
-//	}
 
 	public List<Company> findAll() {
 		return companyRepository.findAll();
@@ -47,6 +45,7 @@ public class CompanyService {
 		return companyRepository.findById(id).orElseThrow(() -> new EntityNotFoundException());
 	}
 	
+	@Transactional
 	public Company update(Company company, Long id) {
 		return companyRepository.findById(id)
 				.map(companyUpdated -> {
@@ -73,6 +72,8 @@ public class CompanyService {
 		
 		company.getVehicles().add(vehicle);
 		
+		vehicle.park();
+		
 		if(vehicle.getType().equals(TypeVehicle.CAR)) {
 			company.decrementOneInTheCarSpace();
 		} else if(vehicle.getType().equals(TypeVehicle.MOTORBIKE)){
@@ -80,5 +81,26 @@ public class CompanyService {
 		}
 		
 		save(company);
+		vehicleRepository.save(vehicle);
+	}
+
+	@Transactional
+	public void notParkVehicle(Long vehicleId) {
+		
+		Vehicle vehicle = vehicleService.findById(vehicleId);
+		Company company = findById(vehicle.getCompany().getId());
+		
+		company.getVehicles().remove(vehicle);
+		
+		vehicle.notPark();
+		
+		if(vehicle.getType().equals(TypeVehicle.CAR)) {
+			company.decrementOneInTheCarSpace();
+		} else if(vehicle.getType().equals(TypeVehicle.MOTORBIKE)){
+			company.decrementOneInTheMotorbikesSpace();
+		}
+		
+		save(company);
+		vehicleRepository.save(vehicle);
 	}
 }

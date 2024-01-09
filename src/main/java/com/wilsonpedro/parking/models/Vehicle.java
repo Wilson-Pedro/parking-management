@@ -4,6 +4,7 @@ import java.util.Objects;
 
 import com.wilsonpedro.parking.dtos.VehicleDTO;
 import com.wilsonpedro.parking.enums.TypeVehicle;
+import com.wilsonpedro.parking.enums.VehicleStatus;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -24,6 +25,7 @@ public class Vehicle {
 	private String color;
 	private String plate;
 	private TypeVehicle type;
+	private VehicleStatus status;
 	
 	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "company_id")
@@ -32,13 +34,14 @@ public class Vehicle {
 	public Vehicle() {
 	}
 
-	public Vehicle(Long id, String brand, String model, String color, String plate, TypeVehicle type) {
+	public Vehicle(Long id, String brand, String model, String color, String plate, TypeVehicle type, VehicleStatus status) {
 		this.id = id;
 		this.brand = brand;
 		this.model = model;
 		this.color = color;
 		this.plate = plate;
 		this.type = type;
+		this.status = status;
 	}
 	
 	public Vehicle(VehicleDTO vehicleDTO) {
@@ -48,6 +51,7 @@ public class Vehicle {
 		color = vehicleDTO.getColor();
 		plate = vehicleDTO.getPlate();
 		type = TypeVehicle.toEnum(vehicleDTO.getType());
+		status = VehicleStatus.toEnum(vehicleDTO.getStatus());
 	}
 
 	public Long getId() {
@@ -96,6 +100,30 @@ public class Vehicle {
 
 	public void setType(TypeVehicle type) {
 		this.type = type;
+	}
+
+	public VehicleStatus getStatus() {
+		return status;
+	}
+
+	public void setStatus(VehicleStatus status) {
+		this.status = status;
+	}
+	
+	public Company getCompany() {
+		return company;
+	}
+
+	public void setCompany(Company company) {
+		this.company = company;
+	}
+
+	public void park() {
+		setStatus(VehicleStatus.PARKED);
+	}
+	
+	public void notPark() {
+		setStatus(VehicleStatus.NOT_PARKED);
 	}
 
 	@Override

@@ -140,6 +140,16 @@ public class Company {
 		setSpacesForMotorbikes(spacesForMotorbikes);
 	}
 
+	public void increaseOneInTheCarSpace() {
+		spacesForCars += 1;
+		setSpacesForCars(spacesForCars);
+	}
+	
+	public void increaseOneInTheMotorbikesSpace() {
+		spacesForMotorbikes += 1;
+		setSpacesForMotorbikes(spacesForMotorbikes);
+	}
+
 	@Override
 	public int hashCode() {
 		return Objects.hash(id);

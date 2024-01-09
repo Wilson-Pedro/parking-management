@@ -23,7 +23,6 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.wilsonpedro.parking.dtos.CompanyInputDTO;
-import com.wilsonpedro.parking.dtos.CompanyMinDTO;
 import com.wilsonpedro.parking.models.Address;
 import com.wilsonpedro.parking.models.Company;
 import com.wilsonpedro.parking.repositories.AddressRepository;
