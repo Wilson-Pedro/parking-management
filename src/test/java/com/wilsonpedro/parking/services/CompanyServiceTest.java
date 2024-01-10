@@ -43,10 +43,10 @@ class CompanyServiceTest {
 	
 	Vehicle vehicle;
 	
-	@BeforeEach
-	void setup() {
-		vehicle = new Vehicle(1L, "Chevrolet", "Onix", "Red", "DGL-1488", TypeVehicle.CAR, VehicleStatus.UNDEFINED);
-	}
+//	@BeforeEach
+//	void setup() {
+//		vehicle = new Vehicle(1L, "Chevrolet", "Onix", "Red", "DGL-1488", TypeVehicle.CAR, VehicleStatus.UNDEFINED);
+//	}
 
 	@Test
 	@Order(1)
@@ -127,6 +127,8 @@ class CompanyServiceTest {
 	@Order(5)
 	void mustAddAVehicleToTheParkingSpaceSuccessfully() {
 		
+		vehicle = new Vehicle(1L, "Chevrolet", "Onix", "Red", "DGL-1488", TypeVehicle.CAR, VehicleStatus.UNDEFINED);
+		
 		Long id = companyService.findAll().get(0).getId();
 		
 		Company company = this.companyService.findById(id);
@@ -144,7 +146,7 @@ class CompanyServiceTest {
 		
 		Long id = companyService.findAll().get(0).getId();
 		
-		//Vehicle vehicle = new Vehicle(null, "Chevrolet", "Onix", "Red", "DGL-1488", TypeVehicle.CAR, VehicleStatus.UNDEFINED);
+		Vehicle vehicle = new Vehicle(2L, "Chevrolet", "Onix", "Red", "DGL-1488", TypeVehicle.CAR, VehicleStatus.UNDEFINED);
 		Company company = this.companyService.findById(id);
 		vehicle.setCompany(company);
 		
@@ -152,11 +154,11 @@ class CompanyServiceTest {
 		
 		assertNotEquals(vehicle.getStatus(), VehicleStatus.NOT_PARKED);
 		
-		//Long vehicleId = vehicleRepository.findAll().get(0).getId();
-		
 		companyService.notParkVehicle(vehicle.getId());
 		
-		//assertEquals(vehicleFinded.getStatus(), VehicleStatus.NOT_PARKED);
+//		Vehicle vehicleFinded = vehicleRepository.findById(vehicle.getId()).get();
+		
+//		assertEquals(vehicleFinded.getStatus(), VehicleStatus.NOT_PARKED);
 		assertEquals(20, company.getSpacesForCars());
 	}
 	

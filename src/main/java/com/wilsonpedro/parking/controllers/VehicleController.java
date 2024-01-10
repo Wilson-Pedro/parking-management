@@ -54,9 +54,15 @@ public class VehicleController {
 		return ResponseEntity.ok(vehicleUpdated);
 	}
 	
-	@PostMapping("/{id}/park")
+	@PutMapping("/{id}/park")
 	public ResponseEntity park(@RequestBody ParkDTO parkDTO, @PathVariable("id") Long vehicleId) {
 		companyService.parkVehicle(parkDTO.getCompanyId(), vehicleId);
+		return ResponseEntity.noContent().build();
+	}
+	
+	@PutMapping("/{id}/notPark")
+	public ResponseEntity park(@PathVariable("id") Long vehicleId) {
+		companyService.notParkVehicle(vehicleId);
 		return ResponseEntity.noContent().build();
 	}
 	

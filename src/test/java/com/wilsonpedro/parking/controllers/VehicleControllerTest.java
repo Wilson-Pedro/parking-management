@@ -23,6 +23,8 @@ import org.springframework.test.web.servlet.MockMvc;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.wilsonpedro.parking.dtos.ParkDTO;
 import com.wilsonpedro.parking.dtos.VehicleDTO;
+import com.wilsonpedro.parking.enums.TypeVehicle;
+import com.wilsonpedro.parking.enums.VehicleStatus;
 import com.wilsonpedro.parking.models.Address;
 import com.wilsonpedro.parking.models.Company;
 import com.wilsonpedro.parking.models.Vehicle;
@@ -30,6 +32,8 @@ import com.wilsonpedro.parking.repositories.AddressRepository;
 import com.wilsonpedro.parking.repositories.VehicleRepository;
 import com.wilsonpedro.parking.services.CompanyService;
 import com.wilsonpedro.parking.services.VehicleService;
+
+import jakarta.transaction.Transactional;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -143,7 +147,7 @@ class VehicleControllerTest {
 		
 		String jsonRequest = objectMapper.writeValueAsString(parkDto);
 		
-		mockMvc.perform(post("/vehicles/{id}/park", vehicle.getId())
+		mockMvc.perform(put("/vehicles/{id}/park", vehicle.getId())
 				.contentType(MediaType.APPLICATION_JSON)
 				.content(jsonRequest))
 				.andExpect(status().isNoContent());
@@ -157,13 +161,46 @@ class VehicleControllerTest {
 		
 	}
 	
+	@Transactional
 	@Test
 	@Order(6)
+	void mustRemoveAVehicleToTheParkingSpaceSuccessfully() throws Exception {
+		
+		Company company = new Company(null, "GG-Tecnology", "84846833000122", null, 
+				"(95)2776-9001", 30, 20);
+		
+		Address address = new Address(null, "12020-020", "Rua das Pétalas", "Goiabas", "Minas-Gerais");
+			
+		Vehicle vehicle = new Vehicle(2L, "Chevrolet", "Onix", "Red", "MTJ-7577", TypeVehicle.CAR, VehicleStatus.PARKED);
+		vehicle.setCompany(company);
+		
+		companyService.save(company);
+		addressRepository.save(address);
+		vehicleRepository.save(vehicle);
+		
+		Long id = vehicleService.findAll().get(0).getId();
+		
+		assertNotEquals(VehicleStatus.NOT_PARKED, vehicle.getStatus());
+		
+		mockMvc.perform(put("/vehicles/{id}/notPark", id))
+					.andExpect(status().isNoContent());
+		
+		Vehicle vehicleFinded = vehicleRepository.findById(id).get();
+		
+		assertEquals(VehicleStatus.NOT_PARKED, vehicleFinded.getStatus());
+	}
+	
+	@Test
+	@Order(7)
 	void mustDeleteTheVehicleSuccessfully() throws Exception {
+		
+		Vehicle vehicle = new Vehicle(2L, "Chevrolet", "Onix", "Red", "MTJ-7577", TypeVehicle.CAR, VehicleStatus.PARKED);
+		
+		vehicleRepository.save(vehicle);
 		
 		assertEquals(1, vehicleRepository.count());
 		
-		mockMvc.perform(delete("/vehicles/{id}", 1L))
+		mockMvc.perform(delete("/vehicles/{id}", vehicle.getId()))
 				.andExpect(status().isNoContent());
 		
 		assertEquals(0, vehicleRepository.count());

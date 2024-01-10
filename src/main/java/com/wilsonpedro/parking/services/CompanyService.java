@@ -80,8 +80,9 @@ public class CompanyService {
 			company.decrementOneInTheMotorbikesSpace();
 		}
 		
-		save(company);
+		vehicle.setCompany(company);
 		vehicleRepository.save(vehicle);
+		save(company);
 	}
 
 	@Transactional
@@ -100,7 +101,7 @@ public class CompanyService {
 			company.decrementOneInTheMotorbikesSpace();
 		}
 		
-		save(company);
 		vehicleRepository.save(vehicle);
+		save(company);
 	}
 }
