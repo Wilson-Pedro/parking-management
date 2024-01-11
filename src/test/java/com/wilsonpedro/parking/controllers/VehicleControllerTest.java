@@ -178,14 +178,14 @@ class VehicleControllerTest {
 		addressRepository.save(address);
 		vehicleRepository.save(vehicle);
 		
-		Long id = vehicleService.findAll().get(0).getId();
+		Long vehicleId = vehicleService.findAll().get(0).getId();
 		
 		assertNotEquals(VehicleStatus.NOT_PARKED, vehicle.getStatus());
 		
-		mockMvc.perform(put("/vehicles/{id}/notPark", id))
+		mockMvc.perform(put("/vehicles/{id}/notPark", vehicleId))
 					.andExpect(status().isNoContent());
 		
-		Vehicle vehicleFinded = vehicleRepository.findById(id).get();
+		Vehicle vehicleFinded = vehicleRepository.findById(vehicleId).get();
 		
 		assertEquals(VehicleStatus.NOT_PARKED, vehicleFinded.getStatus());
 	}

@@ -91,17 +91,10 @@ public class CompanyService {
 		Vehicle vehicle = vehicleService.findById(vehicleId);
 		Company company = findById(vehicle.getCompany().getId());
 		
-		company.getVehicles().remove(vehicle);
-		
 		vehicle.notPark();
 		
-		if(vehicle.getType().equals(TypeVehicle.CAR)) {
-			company.decrementOneInTheCarSpace();
-		} else if(vehicle.getType().equals(TypeVehicle.MOTORBIKE)){
-			company.decrementOneInTheMotorbikesSpace();
-		}
-		
 		vehicleRepository.save(vehicle);
+		
 		save(company);
 	}
 }

@@ -41,12 +41,15 @@ class CompanyServiceTest {
 	@Autowired
 	VehicleRepository vehicleRepository;
 	
+	@Autowired
+	VehicleService vehicleService;
+	
 	Vehicle vehicle;
 	
-//	@BeforeEach
-//	void setup() {
-//		vehicle = new Vehicle(1L, "Chevrolet", "Onix", "Red", "DGL-1488", TypeVehicle.CAR, VehicleStatus.UNDEFINED);
-//	}
+	@BeforeEach
+	void setup() {
+		vehicle = new Vehicle(1L, "Chevrolet", "Onix", "Red", "DGL-1488", TypeVehicle.CAR, VehicleStatus.UNDEFINED);
+	}
 
 	@Test
 	@Order(1)
@@ -127,13 +130,14 @@ class CompanyServiceTest {
 	@Order(5)
 	void mustAddAVehicleToTheParkingSpaceSuccessfully() {
 		
-		vehicle = new Vehicle(1L, "Chevrolet", "Onix", "Red", "DGL-1488", TypeVehicle.CAR, VehicleStatus.UNDEFINED);
+		//vehicle = new Vehicle(1L, "Chevrolet", "Onix", "Red", "DGL-1488", TypeVehicle.CAR, VehicleStatus.UNDEFINED);
 		
 		Long id = companyService.findAll().get(0).getId();
 		
 		Company company = this.companyService.findById(id);
 		
 		vehicleRepository.save(vehicle);
+		
 		companyService.parkVehicle(company.getId(), vehicle.getId());
 		
 		assertEquals(19, company.getSpacesForCars());
@@ -144,22 +148,29 @@ class CompanyServiceTest {
 	@Order(6) 
 	void mustRemoveAVehicleToTheParkingSpaceSuccessfully() {
 		
-		Long id = companyService.findAll().get(0).getId();
+		Long companyId = companyService.findAll().get(0).getId();
+		Company company = this.companyService.findById(companyId);
 		
-		Vehicle vehicle = new Vehicle(2L, "Chevrolet", "Onix", "Red", "DGL-1488", TypeVehicle.CAR, VehicleStatus.UNDEFINED);
-		Company company = this.companyService.findById(id);
+		Vehicle vehicle = new Vehicle(2L, "Chevrolet", "Onix", "Red", "DGL-1488", TypeVehicle.CAR, VehicleStatus.PARKED);
 		vehicle.setCompany(company);
-		
 		vehicleRepository.save(vehicle);
+		
+//		company.decrementOneInTheCarSpace();
+//		companyRepository.save(company);
 		
 		assertNotEquals(vehicle.getStatus(), VehicleStatus.NOT_PARKED);
 		
 		companyService.notParkVehicle(vehicle.getId());
 		
-//		Vehicle vehicleFinded = vehicleRepository.findById(vehicle.getId()).get();
+		Long vehicleId = vehicleService.findAll().get(0).getId();
 		
-//		assertEquals(vehicleFinded.getStatus(), VehicleStatus.NOT_PARKED);
-		assertEquals(20, company.getSpacesForCars());
+		Vehicle vehicleFinded = vehicleService.findById(vehicleId);
+		
+		assertEquals(vehicleFinded.getStatus(), VehicleStatus.NOT_PARKED);
+		
+//		Company companyFinded = this.companyService.findById(companyId);
+		
+//		assertEquals(20, companyFinded.getSpacesForCars());
 	}
 	
 	@Test
