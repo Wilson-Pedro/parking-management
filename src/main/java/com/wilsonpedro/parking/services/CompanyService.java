@@ -46,19 +46,32 @@ public class CompanyService {
 	}
 	
 	@Transactional
-	public Company update(Company company, Long id) {
+	public Company update(CompanyInputDTO companyInput, Long id) {
 		return companyRepository.findById(id)
 				.map(companyUpdated -> {
 					companyUpdated.setId(id);
-					companyUpdated.setName(company.getName());
-					companyUpdated.setCnpj(company.getCnpj());
-					companyUpdated.setAddress(company.getAddress());
-					companyUpdated.setPhone(company.getPhone());
-					companyUpdated.setSpacesForMotorbikes(company.getSpacesForMotorbikes());
-					companyUpdated.setSpacesForCars(company.getSpacesForCars());
+					companyUpdated.setName(companyInput.getName());
+					companyUpdated.setCnpj(companyInput.getCnpj());
+					companyUpdated.setPhone(companyInput.getPhone());
+					companyUpdated.setSpacesForMotorbikes(companyInput.getSpacesForMotorbikes());
+					companyUpdated.setSpacesForCars(companyInput.getSpacesForCars());
 					return save(companyUpdated);
 				}).orElseThrow(() -> new EntityNotFoundException());
 	}
+	
+//	@Transactional
+//	public Company update(CompanyInputDTO companyInput, Long id) {
+//		return companyRepository.findById(id)
+//				.map(companyUpdated -> {
+//					companyUpdated.setId(id);
+//					companyUpdated.setName(companyInput.getName());
+//					companyUpdated.setCnpj(companyInput.getCnpj());
+//					companyUpdated.setPhone(companyInput.getPhone());
+//					companyUpdated.setSpacesForMotorbikes(companyInput.getSpacesForMotorbikes());
+//					companyUpdated.setSpacesForCars(companyInput.getSpacesForCars());
+//					return save(companyUpdated);
+//				}).orElseThrow(() -> new EntityNotFoundException());
+//	}
 	
 	public void delete(Long id) {
 		companyRepository.delete(companyRepository.findById(id)

@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.wilsonpedro.parking.dtos.CompanyDTO;
 import com.wilsonpedro.parking.dtos.CompanyInputDTO;
 import com.wilsonpedro.parking.models.Company;
 import com.wilsonpedro.parking.services.CompanyService;
@@ -28,7 +29,7 @@ public class CompanyController {
 	@PostMapping("/")
 	public ResponseEntity save(@RequestBody CompanyInputDTO companyInputMinDTO) {
 		Company companySaved = companyService.save(companyInputMinDTO);
-		CompanyInputDTO companyDTO = new CompanyInputDTO(companySaved);
+		CompanyDTO companyDTO = new CompanyDTO(companySaved);
 		return ResponseEntity.status(HttpStatus.CREATED).body(companyDTO);
 	}
 	
@@ -42,13 +43,15 @@ public class CompanyController {
 	@GetMapping("/{id}")
 	public ResponseEntity findAll(@PathVariable Long id) {
 		Company company = companyService.findById(id);
-		return ResponseEntity.ok().body(company);
+		CompanyDTO dtoFinded = new CompanyDTO(company);
+		return ResponseEntity.ok().body(dtoFinded);
 	}
 	
 	@PutMapping("/{id}")
-	public ResponseEntity update(@RequestBody Company company, @PathVariable Long id) {
-		Company companyUpdated = companyService.update(company, id);
-		return ResponseEntity.ok().body(companyUpdated);
+	public ResponseEntity update(@RequestBody CompanyInputDTO companyInput, @PathVariable Long id) {
+		Company companyUpdated = companyService.update(companyInput, id);
+		CompanyDTO dtoUpdated= new CompanyDTO(companyUpdated);
+		return ResponseEntity.ok().body(dtoUpdated);
 	}
 	
 	@DeleteMapping("/{id}")

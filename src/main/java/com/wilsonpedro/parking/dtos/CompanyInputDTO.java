@@ -3,8 +3,6 @@ package com.wilsonpedro.parking.dtos;
 import com.wilsonpedro.parking.models.Company;
 
 public class CompanyInputDTO {
-
-	private Long id;
 	
 	private String name;
 	
@@ -30,20 +28,11 @@ public class CompanyInputDTO {
 
 
 	public CompanyInputDTO(Company company) {
-		id = company.getId();
 		name = company.getName();
 		cnpj = company.getCnpj();
 		phone = company.getPhone();
 		spacesForMotorbikes = company.getSpacesForMotorbikes();
 		spacesForCars = company.getSpacesForCars();
-	}
-
-	public Long getId() {
-		return id;
-	}
-
-	public void setId(Long id) {
-		this.id = id;
 	}
 
 	public String getName() {

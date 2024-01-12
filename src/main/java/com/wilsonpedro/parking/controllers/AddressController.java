@@ -28,8 +28,8 @@ public class AddressController {
 	@PostMapping("/")
 	public ResponseEntity save(@RequestBody AddressDTO addressDTO) {
 		Address addressSaved = addressService.save(addressDTO);
-		
-		return ResponseEntity.status(HttpStatus.CREATED).body(addressSaved);
+		AddressDTO dtoSaved = new AddressDTO(addressSaved);
+		return ResponseEntity.status(HttpStatus.CREATED).body(dtoSaved);
 	}
 	
 	@GetMapping
@@ -41,13 +41,15 @@ public class AddressController {
 	@GetMapping("/{id}")
 	public ResponseEntity findAll(@PathVariable Long id) {
 		Address address = addressService.findById(id);
-		return ResponseEntity.ok().body(address);
+		AddressDTO dtoFinded = new AddressDTO(address);
+		return ResponseEntity.ok().body(dtoFinded);
 	}
 	
 	@PutMapping("/{id}")
 	public ResponseEntity update(@RequestBody AddressDTO addressDTO, @PathVariable Long id) {
 		Address addressUpdated = addressService.update(addressDTO, id);
-		return ResponseEntity.ok().body(addressUpdated);
+		AddressDTO dtoUpdated = new AddressDTO(addressUpdated);
+		return ResponseEntity.ok().body(dtoUpdated);
 	}
 	
 	@DeleteMapping("/{id}")

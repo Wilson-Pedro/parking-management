@@ -4,7 +4,7 @@ import com.wilsonpedro.parking.models.Company;
 
 public class CompanyMinDTO {
 
-private Long id;
+	private Long id;
 	
 	private String name;
 	

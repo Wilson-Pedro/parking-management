@@ -77,7 +77,7 @@ class VehicleControllerTest {
 				.andExpect(jsonPath("$.model", equalTo("Onix")))
 				.andExpect(jsonPath("$.color", equalTo("Red")))
 				.andExpect(jsonPath("$.plate", equalTo("MTJ-7577")))
-				.andExpect(jsonPath("$.type", equalTo("CAR")));
+				.andExpect(jsonPath("$.type", equalTo("Car")));
 	
 		assertEquals(1, vehicleRepository.count());
 	}
@@ -101,7 +101,7 @@ class VehicleControllerTest {
 		.andExpect(jsonPath("$.model", equalTo("Onix")))
 		.andExpect(jsonPath("$.color", equalTo("Red")))
 		.andExpect(jsonPath("$.plate", equalTo("MTJ-7577")))
-		.andExpect(jsonPath("$.type", equalTo("CAR")));
+		.andExpect(jsonPath("$.type", equalTo("Car")));
 	}
 	
 	@Test

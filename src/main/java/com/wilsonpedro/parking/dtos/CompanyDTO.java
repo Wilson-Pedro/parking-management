@@ -31,6 +31,14 @@ public class CompanyDTO {
 		spacesForMotorbikes = company.getSpacesForMotorbikes();
 		spacesForCars = company.getSpacesForCars();
 	}
+	
+	public CompanyDTO(CompanyInputDTO company) {
+		name = company.getName();
+		cnpj = company.getCnpj();
+		phone = company.getPhone();
+		spacesForMotorbikes = company.getSpacesForMotorbikes();
+		spacesForCars = company.getSpacesForCars();
+	}
 
 	public Long getId() {
 		return id;
