@@ -23,17 +23,6 @@ class CompanyServiceExceptionTest {
 		assertThrows(EntityNotFoundException.class, () -> companyService.findById(70L));
 	}
 	
-//	@Test
-//	void EntityNotFoundExceptionWhenTryingToUpdateCompany() {
-//		
-//		Address address = new Address(70L, "54320-151", "Rua das Ameixas", "Flores", "Minas-Gerais");
-//		
-//		Company company = new Company(70L, "WS-Tecnology", "14326422000166", address, 
-//				"(95)2256-9123", 30, 20);
-//		
-//		assertThrows(EntityNotFoundException.class, () -> companyService.update(company, 70L));
-//	}
-	
 	@Test
 	void EntityNotFoundExceptionWhenTryingToUpdateCompany() {
 		

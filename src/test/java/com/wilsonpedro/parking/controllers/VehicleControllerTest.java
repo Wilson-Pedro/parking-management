@@ -21,6 +21,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.wilsonpedro.parking.dtos.CompanyInputDTO;
 import com.wilsonpedro.parking.dtos.ParkDTO;
 import com.wilsonpedro.parking.dtos.VehicleDTO;
 import com.wilsonpedro.parking.enums.TypeVehicle;
@@ -62,7 +63,14 @@ class VehicleControllerTest {
 	@Order(1)
 	void mustSaveTheVehcileSuccessfully() throws Exception {
 		
-		VehicleDTO vehicleDTO = new VehicleDTO("Chevrolet", "Onix", "Red", "MTJ-7577", "Car", "Parked");
+		Company company = new Company(null, "WS-Tecnology", "14326422000166", null, 
+		"(95)2256-9123", 30, 20);
+		
+		companyService.save(company);
+		
+		Long companyId = companyService.findAll().get(0).getId();
+		
+		VehicleDTO vehicleDTO = new VehicleDTO("Chevrolet", "Onix", "Red", "MTJ-7577", "Car", "Parked", companyId);
 		
 		String jsonRequest = objectMapper.writeValueAsString(vehicleDTO);
 		
@@ -95,24 +103,26 @@ class VehicleControllerTest {
 	void mustFindForTheVehicleFromTheIdSuccessfully() throws Exception {
 		
 		mockMvc.perform(get("/vehicles/{id}", 1L))
-		.andExpect(status().isOk())
-		.andExpect(jsonPath("$.id", equalTo(1)))
-		.andExpect(jsonPath("$.brand", equalTo("Chevrolet")))
-		.andExpect(jsonPath("$.model", equalTo("Onix")))
-		.andExpect(jsonPath("$.color", equalTo("Red")))
-		.andExpect(jsonPath("$.plate", equalTo("MTJ-7577")))
-		.andExpect(jsonPath("$.type", equalTo("Car")));
+			.andExpect(status().isOk())
+			.andExpect(jsonPath("$.id", equalTo(1)))
+			.andExpect(jsonPath("$.brand", equalTo("Chevrolet")))
+			.andExpect(jsonPath("$.model", equalTo("Onix")))
+			.andExpect(jsonPath("$.color", equalTo("Red")))
+			.andExpect(jsonPath("$.plate", equalTo("MTJ-7577")))
+			.andExpect(jsonPath("$.type", equalTo("Car")));
 	}
 	
 	@Test
 	@Order(4)
 	void mustUpdateTheVehicleSuccessfully() throws Exception {
 		
+		Long companyId = companyService.findAll().get(0).getId();
+		
 		Vehicle vehicle = vehicleService.findById(1L);
 		
 		assertNotEquals("HTJ-1234", vehicle.getPlate());
 		
-		VehicleDTO vehicleUpdated = new VehicleDTO("Chevrolet", "Onix", "Red", "HTJ-1234", "Car", "Parked");
+		VehicleDTO vehicleUpdated = new VehicleDTO("Chevrolet", "Onix", "Red", "HTJ-1234", "Car", "Parked", companyId);
 		
 		String jsonRequest = objectMapper.writeValueAsString(vehicleUpdated);
 		
@@ -129,63 +139,38 @@ class VehicleControllerTest {
 	
 	@Test
 	@Order(5)
-	void mustAddAVehicleToTheParkingSpaceSuccessfully() throws Exception {
+	void mustChangeStatusToParkSuccessfully() throws Exception {
 		
-		Address address = new Address(null, "96520-190", "Rua das Ameixas", "Flores", "Minas-Gerais");
+		Long id = vehicleService.findAll().get(0).getId();
 		
-		Company company = new Company(null, "GG-Tecnology", "26826433000977", address, 
-				"(95)2776-9001", 30, 20);
+		Vehicle vehicle = vehicleService.findById(id);
+		vehicle.undefined();
 		
-		Vehicle vehicle = vehicleService.findById(1L);
+		assertNotEquals(VehicleStatus.PARKED, vehicle.getStatus());
 		
-		addressRepository.save(address);
-		companyService.save(company);
+		mockMvc.perform(put("/vehicles/{id}/park", id))
+					.andExpect(status().isNoContent());
 		
-		Long empresaId = companyService.findAll().get(0).getId();
+		Vehicle vehicleFinded = vehicleRepository.findById(id).get();
 		
-		ParkDTO parkDto = new ParkDTO(empresaId);
-		
-		String jsonRequest = objectMapper.writeValueAsString(parkDto);
-		
-		mockMvc.perform(put("/vehicles/{id}/park", vehicle.getId())
-				.contentType(MediaType.APPLICATION_JSON)
-				.content(jsonRequest))
-				.andExpect(status().isNoContent());
-		
-		Company companyFinded = companyService.findById(empresaId);
-		
-		assertEquals(19, companyFinded.getSpacesForCars());
-		
-		addressRepository.delete(address);
-		companyService.delete(companyFinded.getId());
-		
+		assertEquals(VehicleStatus.PARKED, vehicleFinded.getStatus());
 	}
 	
 	@Transactional
 	@Test
 	@Order(6)
-	void mustRemoveAVehicleToTheParkingSpaceSuccessfully() throws Exception {
+	void mustChangeStatusToNotParkSuccessfully() throws Exception {
 		
-		Company company = new Company(null, "GG-Tecnology", "84846833000122", null, 
-				"(95)2776-9001", 30, 20);
+		Long id = vehicleService.findAll().get(0).getId();
 		
-		Address address = new Address(null, "12020-020", "Rua das Pétalas", "Goiabas", "Minas-Gerais");
-			
-		Vehicle vehicle = new Vehicle(2L, "Chevrolet", "Onix", "Red", "MTJ-7577", TypeVehicle.CAR, VehicleStatus.PARKED);
-		vehicle.setCompany(company);
-		
-		companyService.save(company);
-		addressRepository.save(address);
-		vehicleRepository.save(vehicle);
-		
-		Long vehicleId = vehicleService.findAll().get(0).getId();
+		Vehicle vehicle = vehicleService.findById(id);
 		
 		assertNotEquals(VehicleStatus.NOT_PARKED, vehicle.getStatus());
 		
-		mockMvc.perform(put("/vehicles/{id}/notPark", vehicleId))
+		mockMvc.perform(put("/vehicles/{id}/notPark", id))
 					.andExpect(status().isNoContent());
 		
-		Vehicle vehicleFinded = vehicleRepository.findById(vehicleId).get();
+		Vehicle vehicleFinded = vehicleRepository.findById(id).get();
 		
 		assertEquals(VehicleStatus.NOT_PARKED, vehicleFinded.getStatus());
 	}
@@ -194,13 +179,11 @@ class VehicleControllerTest {
 	@Order(7)
 	void mustDeleteTheVehicleSuccessfully() throws Exception {
 		
-		Vehicle vehicle = new Vehicle(2L, "Chevrolet", "Onix", "Red", "MTJ-7577", TypeVehicle.CAR, VehicleStatus.PARKED);
-		
-		vehicleRepository.save(vehicle);
+		Long id = vehicleService.findAll().get(0).getId();
 		
 		assertEquals(1, vehicleRepository.count());
 		
-		mockMvc.perform(delete("/vehicles/{id}", vehicle.getId()))
+		mockMvc.perform(delete("/vehicles/{id}", id))
 				.andExpect(status().isNoContent());
 		
 		assertEquals(0, vehicleRepository.count());

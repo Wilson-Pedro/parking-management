@@ -133,17 +133,26 @@ class CompanyServiceTest {
 	@Order(5)
 	void mustAddAVehicleToTheParkingSpaceSuccessfully() {
 		
-		//vehicle = new Vehicle(1L, "Chevrolet", "Onix", "Red", "DGL-1488", TypeVehicle.CAR, VehicleStatus.UNDEFINED);
-		
-		Long id = companyService.findAll().get(0).getId();
-		
-		Company company = this.companyService.findById(id);
-		
 		vehicleRepository.save(vehicle);
 		
-		companyService.parkVehicle(company.getId(), vehicle.getId());
+		Long id = companyService.findAll().get(0).getId();
+		Company company = this.companyService.findById(id);
+		
+		assertEquals(20, company.getSpacesForCars());
+		
+		companyService.addVehicleInVacantSpace(company, vehicle);
 		
 		assertEquals(19, company.getSpacesForCars());
+		
+//		vehicleRepository.save(vehicle);
+//		
+//		assertNotEquals(VehicleStatus.PARKED, vehicle.getStatus());
+//		
+//		companyService.parkVehicle(vehicle.getId());
+//		
+//		Vehicle vehicleFinded = vehicleRepository.findById(vehicle.getId()).get();
+//		
+//		assertEquals(VehicleStatus.PARKED, vehicleFinded.getStatus());
 		
 	}
 	
@@ -151,29 +160,18 @@ class CompanyServiceTest {
 	@Order(6) 
 	void mustRemoveAVehicleToTheParkingSpaceSuccessfully() {
 		
-		Long companyId = companyService.findAll().get(0).getId();
-		Company company = this.companyService.findById(companyId);
-		
-		Vehicle vehicle = new Vehicle(2L, "Chevrolet", "Onix", "Red", "DGL-1488", TypeVehicle.CAR, VehicleStatus.PARKED);
-		vehicle.setCompany(company);
 		vehicleRepository.save(vehicle);
 		
-//		company.decrementOneInTheCarSpace();
-//		companyRepository.save(company);
+		Long id = companyService.findAll().get(0).getId();
+		Company company = this.companyService.findById(id);
 		
-		assertNotEquals(vehicle.getStatus(), VehicleStatus.NOT_PARKED);
+		company.decrementOneInTheCarSpace();
 		
-		companyService.notParkVehicle(vehicle.getId());
+		assertEquals(19, company.getSpacesForCars());
 		
-		Long vehicleId = vehicleService.findAll().get(0).getId();
+		companyService.removeVehicleInVacantSpace(company, vehicle);
 		
-		Vehicle vehicleFinded = vehicleService.findById(vehicleId);
-		
-		assertEquals(vehicleFinded.getStatus(), VehicleStatus.NOT_PARKED);
-		
-//		Company companyFinded = this.companyService.findById(companyId);
-		
-//		assertEquals(20, companyFinded.getSpacesForCars());
+		assertEquals(20, company.getSpacesForCars());
 	}
 	
 	@Test

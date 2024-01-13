@@ -11,17 +11,19 @@ public class VehicleDTO {
 	private String plate;
 	private String type;
 	private String status;
+	private Long companyId;
 	
 	public VehicleDTO() {
 	}
 
-	public VehicleDTO(String brand, String model, String color, String plate, String type, String status) {
+	public VehicleDTO(String brand, String model, String color, String plate, String type, String status, Long companyId) {
 		this.brand = brand;
 		this.model = model;
 		this.color = color;
 		this.plate = plate;
 		this.type = type;
 		this.status = status;
+		this.companyId = companyId;
 	}
 	
 	public VehicleDTO(Vehicle vehicle) {
@@ -32,6 +34,7 @@ public class VehicleDTO {
 		plate = vehicle.getPlate();
 		type = vehicle.getType().getDescription();
 		status = vehicle.getStatus().getDescription();
+		companyId = vehicle.getCompany().getId();
 	}
 
 	public Long getId() {
@@ -88,5 +91,13 @@ public class VehicleDTO {
 
 	public void setStatus(String status) {
 		this.status = status;
+	}
+
+	public Long getCompanyId() {
+		return companyId;
+	}
+
+	public void setCompanyId(Long companyId) {
+		this.companyId = companyId;
 	}
 }

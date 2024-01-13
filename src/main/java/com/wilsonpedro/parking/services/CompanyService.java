@@ -79,13 +79,26 @@ public class CompanyService {
 	}
 
 	@Transactional
-	public void parkVehicle(Long companyId, Long vehicleId) {
+	public void parkVehicle(Long vehicleId) {
 		Vehicle vehicle = vehicleService.findById(vehicleId);
-		Company company = findById(companyId);
-		
-		company.getVehicles().add(vehicle);
 		
 		vehicle.park();
+		
+		vehicleRepository.save(vehicle);
+	}
+
+	@Transactional
+	public void notParkVehicle(Long vehicleId) {
+		Vehicle vehicle = vehicleService.findById(vehicleId);
+		
+		vehicle.notPark();
+		
+		vehicleRepository.save(vehicle);
+	}
+	
+	public void addVehicleInVacantSpace(Company company, Vehicle vehicle) {
+		
+		company.getVehicles().add(vehicle);
 		
 		if(vehicle.getType().equals(TypeVehicle.CAR)) {
 			company.decrementOneInTheCarSpace();
@@ -93,20 +106,16 @@ public class CompanyService {
 			company.decrementOneInTheMotorbikesSpace();
 		}
 		
-		vehicle.setCompany(company);
-		vehicleRepository.save(vehicle);
 		save(company);
 	}
-
-	@Transactional
-	public void notParkVehicle(Long vehicleId) {
+	
+	public void removeVehicleInVacantSpace(Company company, Vehicle vehicle) {
 		
-		Vehicle vehicle = vehicleService.findById(vehicleId);
-		Company company = findById(vehicle.getCompany().getId());
-		
-		vehicle.notPark();
-		
-		vehicleRepository.save(vehicle);
+		if(vehicle.getType().equals(TypeVehicle.CAR)) {
+			company.increaseOneInTheCarSpace();
+		} else if(vehicle.getType().equals(TypeVehicle.MOTORBIKE)){
+			company.increaseOneInTheMotorbikesSpace();
+		}
 		
 		save(company);
 	}

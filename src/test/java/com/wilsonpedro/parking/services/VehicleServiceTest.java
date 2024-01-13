@@ -15,8 +15,9 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import com.wilsonpedro.parking.dtos.VehicleDTO;
 import com.wilsonpedro.parking.enums.TypeVehicle;
+import com.wilsonpedro.parking.models.Company;
 import com.wilsonpedro.parking.models.Vehicle;
-import com.wilsonpedro.parking.repositories.AddressRepository;
+import com.wilsonpedro.parking.repositories.CompanyRepository;
 import com.wilsonpedro.parking.repositories.VehicleRepository;
 
 @SpringBootTest
@@ -30,11 +31,20 @@ class VehicleServiceTest {
 	VehicleRepository vehicleRepository;
 	
 	@Autowired
-	AddressRepository addressRepository;
+	CompanyRepository companyRepository;
 
 	@Test
 	@Order(1)
 	void mustSaveTheVehicleSuccessfully() {
+		
+		vehicleRepository.deleteAll();
+		
+		Company company = new Company(null, "WS-Tecnology", "14326422000166", null, 
+		"(95)2256-9123", 30, 20);
+		
+		companyRepository.save(company);
+		
+		Long companyId = companyRepository.findAll().get(0).getId();
 		
 		VehicleDTO vehicleDTO = new VehicleDTO();
 		vehicleDTO.setId(null);
@@ -44,6 +54,7 @@ class VehicleServiceTest {
 		vehicleDTO.setPlate("HZN-8845");
 		vehicleDTO.setType("Car");
 		vehicleDTO.setStatus("Parked");
+		vehicleDTO.setCompanyId(companyId);
 		
 		assertEquals(0, vehicleRepository.count());
 		

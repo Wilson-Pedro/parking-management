@@ -125,6 +125,10 @@ public class Vehicle {
 	public void notPark() {
 		setStatus(VehicleStatus.NOT_PARKED);
 	}
+	
+	public void undefined() {
+		setStatus(VehicleStatus.UNDEFINED);
+	}
 
 	@Override
 	public int hashCode() {

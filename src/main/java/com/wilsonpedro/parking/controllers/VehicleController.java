@@ -58,13 +58,13 @@ public class VehicleController {
 	}
 	
 	@PutMapping("/{id}/park")
-	public ResponseEntity park(@RequestBody ParkDTO parkDTO, @PathVariable("id") Long vehicleId) {
-		companyService.parkVehicle(parkDTO.getCompanyId(), vehicleId);
+	public ResponseEntity park(@PathVariable("id") Long vehicleId) {
+		companyService.parkVehicle(vehicleId);
 		return ResponseEntity.noContent().build();
 	}
 	
 	@PutMapping("/{id}/notPark")
-	public ResponseEntity park(@PathVariable("id") Long vehicleId) {
+	public ResponseEntity notPpark(@PathVariable("id") Long vehicleId) {
 		companyService.notParkVehicle(vehicleId);
 		return ResponseEntity.noContent().build();
 	}

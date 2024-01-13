@@ -7,7 +7,9 @@ import org.springframework.stereotype.Service;
 
 import com.wilsonpedro.parking.dtos.VehicleDTO;
 import com.wilsonpedro.parking.enums.TypeVehicle;
+import com.wilsonpedro.parking.models.Company;
 import com.wilsonpedro.parking.models.Vehicle;
+import com.wilsonpedro.parking.repositories.CompanyRepository;
 import com.wilsonpedro.parking.repositories.VehicleRepository;
 
 import jakarta.persistence.EntityNotFoundException;
@@ -18,10 +20,22 @@ public class VehicleService {
 	@Autowired
 	private VehicleRepository vehicleRepository;
 	
+	@Autowired
+	private CompanyRepository companyRepository;
+	
 	public Vehicle save(VehicleDTO vehicleDTO) {
-		return vehicleRepository.save(new Vehicle(vehicleDTO));
+		Vehicle vehicle = prepareToSave(vehicleDTO);
+		return vehicleRepository.save(vehicle);
 	}
 	 
+	private Vehicle prepareToSave(VehicleDTO vehicleDTO) {
+		Vehicle vehicle = new Vehicle(vehicleDTO);
+		Company company = companyRepository.findById(vehicleDTO.getCompanyId()).get();
+		vehicle.setCompany(company);
+		vehicle.undefined();
+		return vehicle;
+	}
+
 	public List<Vehicle> findAll() {
 		return vehicleRepository.findAll();
 	}
@@ -32,6 +46,9 @@ public class VehicleService {
 	}
 
 	public Vehicle update(VehicleDTO vehicleDTO, Long id) {
+		
+		Company company = companyRepository.findById(vehicleDTO.getCompanyId()).get();
+		
 		return vehicleRepository.findById(id)
 				.map(vehicleUpdated -> {
 					vehicleUpdated.setId(id);
@@ -40,6 +57,7 @@ public class VehicleService {
 					vehicleUpdated.setColor(vehicleDTO.getColor());
 					vehicleUpdated.setPlate(vehicleDTO.getPlate());
 					vehicleUpdated.setType(TypeVehicle.toEnum(vehicleDTO.getType()));
+					vehicleUpdated.setCompany(company);
 					return vehicleRepository.save(vehicleUpdated);
 				}).orElseThrow(() -> new EntityNotFoundException());
 	}

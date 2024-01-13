@@ -8,6 +8,9 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import com.wilsonpedro.parking.dtos.VehicleDTO;
 import com.wilsonpedro.parking.enums.TypeVehicle;
+import com.wilsonpedro.parking.models.Company;
+import com.wilsonpedro.parking.repositories.CompanyRepository;
+import com.wilsonpedro.parking.services.CompanyService;
 import com.wilsonpedro.parking.services.VehicleService;
 
 import jakarta.persistence.EntityNotFoundException;
@@ -18,6 +21,9 @@ class VehicleExceptionTest {
 	@Autowired
 	VehicleService vehicleService;
 	
+	@Autowired
+	CompanyRepository companyRepository;
+	
 	@Test
 	void EntityNotFoundExceptionWhenTryingToFetchVehicle() {
 		
@@ -27,7 +33,13 @@ class VehicleExceptionTest {
 	@Test
 	void EntityNotFoundExceptionWhenTryingToUpdateVehicle() {
 		
-		VehicleDTO vehicleDTO = new VehicleDTO("Chevrolet", "Onix", "Red", "MTJ-7577", "Car", "Parked");
+		Company company = new Company(1L, "WS-Tecnology", "14326422000166", null, 
+				"(95)2256-9123", 30, 20);
+		
+		companyRepository.save(company);
+		
+		VehicleDTO vehicleDTO = new VehicleDTO
+				("Chevrolet", "Onix", "Red", "MTJ-7577", "Car", "Parked", company.getId());
 		
 		assertThrows(EntityNotFoundException.class, () -> vehicleService.update(vehicleDTO, 70L));
 	}
