@@ -15,6 +15,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import com.wilsonpedro.parking.dtos.VehicleDTO;
 import com.wilsonpedro.parking.enums.TypeVehicle;
+import com.wilsonpedro.parking.enums.VehicleStatus;
 import com.wilsonpedro.parking.models.Company;
 import com.wilsonpedro.parking.models.Vehicle;
 import com.wilsonpedro.parking.repositories.CompanyRepository;
@@ -53,7 +54,7 @@ class VehicleServiceTest {
 		vehicleDTO.setColor("Red");
 		vehicleDTO.setPlate("HZN-8845");
 		vehicleDTO.setType("Car");
-		vehicleDTO.setStatus("Parked");
+		vehicleDTO.setStatus("Undefined");
 		vehicleDTO.setCompanyId(companyId);
 		
 		assertEquals(0, vehicleRepository.count());
@@ -89,6 +90,7 @@ class VehicleServiceTest {
 		assertEquals("Red", vehicle.getColor());
 		assertEquals("HZN-8845", vehicle.getPlate());
 		assertEquals(TypeVehicle.CAR, vehicle.getType());
+		assertEquals(VehicleStatus.UNDEFINED, vehicle.getStatus());
 	}
 	
 	@Test
@@ -111,6 +113,40 @@ class VehicleServiceTest {
 	
 	@Test
 	@Order(5)
+	void mustChangeVehicleStatusToParkSuccessfully() {
+		
+		Long id = vehicleService.findAll().get(0).getId();
+		
+		Vehicle vehicle = vehicleService.findById(id);
+		
+		assertNotEquals(VehicleStatus.PARKED, vehicle.getStatus());
+		
+		vehicleService.parkVehicle(vehicle.getId());
+		
+		Vehicle vehicleFinded = vehicleRepository.findById(vehicle.getId()).get();
+		
+		assertEquals(VehicleStatus.PARKED, vehicleFinded.getStatus());
+	}
+	
+	@Test
+	@Order(6)
+	void mustChangeVehicleStatusToNotParkSuccessfully() {
+		
+		Long id = vehicleService.findAll().get(0).getId();
+		
+		Vehicle vehicle = vehicleService.findById(id);
+		
+		assertNotEquals(VehicleStatus.NOT_PARKED, vehicle.getStatus());
+		
+		vehicleService.notParkVehicle(vehicle.getId());
+		
+		Vehicle vehicleFinded = vehicleRepository.findById(vehicle.getId()).get();
+		
+		assertEquals(VehicleStatus.NOT_PARKED, vehicleFinded.getStatus());
+	}
+	
+	@Test
+	@Order(7)
 	void mustDeleteTheVehicleSuccessfully() {
 		
 		Long id = vehicleService.findAll().get(0).getId();

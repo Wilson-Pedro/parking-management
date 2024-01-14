@@ -59,5 +59,4 @@ public class CompanyController {
 		companyService.delete(id);
 		return ResponseEntity.noContent().build();
 	}
-
 }

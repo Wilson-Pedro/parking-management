@@ -10,7 +10,6 @@ import com.wilsonpedro.parking.enums.TypeVehicle;
 import com.wilsonpedro.parking.models.Company;
 import com.wilsonpedro.parking.models.Vehicle;
 import com.wilsonpedro.parking.repositories.CompanyRepository;
-import com.wilsonpedro.parking.repositories.VehicleRepository;
 
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
@@ -20,12 +19,6 @@ public class CompanyService {
 
 	@Autowired
 	private CompanyRepository companyRepository;
-	
-	@Autowired
-	VehicleService vehicleService;
-	
-	@Autowired
-	VehicleRepository vehicleRepository;
 	
 	@Transactional
 	public Company save(Company company) {
@@ -59,41 +52,9 @@ public class CompanyService {
 				}).orElseThrow(() -> new EntityNotFoundException());
 	}
 	
-//	@Transactional
-//	public Company update(CompanyInputDTO companyInput, Long id) {
-//		return companyRepository.findById(id)
-//				.map(companyUpdated -> {
-//					companyUpdated.setId(id);
-//					companyUpdated.setName(companyInput.getName());
-//					companyUpdated.setCnpj(companyInput.getCnpj());
-//					companyUpdated.setPhone(companyInput.getPhone());
-//					companyUpdated.setSpacesForMotorbikes(companyInput.getSpacesForMotorbikes());
-//					companyUpdated.setSpacesForCars(companyInput.getSpacesForCars());
-//					return save(companyUpdated);
-//				}).orElseThrow(() -> new EntityNotFoundException());
-//	}
-	
 	public void delete(Long id) {
 		companyRepository.delete(companyRepository.findById(id)
 				.orElseThrow(() -> new EntityNotFoundException()));
-	}
-
-	@Transactional
-	public void parkVehicle(Long vehicleId) {
-		Vehicle vehicle = vehicleService.findById(vehicleId);
-		
-		vehicle.park();
-		
-		vehicleRepository.save(vehicle);
-	}
-
-	@Transactional
-	public void notParkVehicle(Long vehicleId) {
-		Vehicle vehicle = vehicleService.findById(vehicleId);
-		
-		vehicle.notPark();
-		
-		vehicleRepository.save(vehicle);
 	}
 	
 	public void addVehicleInVacantSpace(Company company, Vehicle vehicle) {

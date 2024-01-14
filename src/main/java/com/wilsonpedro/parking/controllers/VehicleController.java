@@ -14,10 +14,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.wilsonpedro.parking.dtos.ParkDTO;
 import com.wilsonpedro.parking.dtos.VehicleDTO;
 import com.wilsonpedro.parking.models.Vehicle;
-import com.wilsonpedro.parking.services.CompanyService;
 import com.wilsonpedro.parking.services.VehicleService;
 
 @RestController
@@ -26,9 +24,6 @@ public class VehicleController {
 
 	@Autowired
 	private VehicleService vehicleService;
-	
-	@Autowired
-	private CompanyService companyService;
 	
 	@PostMapping("/")
 	public ResponseEntity save(@RequestBody VehicleDTO vehicleDTO) {
@@ -59,13 +54,13 @@ public class VehicleController {
 	
 	@PutMapping("/{id}/park")
 	public ResponseEntity park(@PathVariable("id") Long vehicleId) {
-		companyService.parkVehicle(vehicleId);
+		vehicleService.parkVehicle(vehicleId);
 		return ResponseEntity.noContent().build();
 	}
 	
 	@PutMapping("/{id}/notPark")
 	public ResponseEntity notPpark(@PathVariable("id") Long vehicleId) {
-		companyService.notParkVehicle(vehicleId);
+		vehicleService.notParkVehicle(vehicleId);
 		return ResponseEntity.noContent().build();
 	}
 	

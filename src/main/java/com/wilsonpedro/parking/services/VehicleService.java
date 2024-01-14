@@ -13,6 +13,7 @@ import com.wilsonpedro.parking.repositories.CompanyRepository;
 import com.wilsonpedro.parking.repositories.VehicleRepository;
 
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.transaction.Transactional;
 
 @Service
 public class VehicleService {
@@ -60,6 +61,24 @@ public class VehicleService {
 					vehicleUpdated.setCompany(company);
 					return vehicleRepository.save(vehicleUpdated);
 				}).orElseThrow(() -> new EntityNotFoundException());
+	}
+	
+	@Transactional
+	public void parkVehicle(Long vehicleId) {
+		Vehicle vehicle = findById(vehicleId);
+		
+		vehicle.park();
+		
+		vehicleRepository.save(vehicle);
+	}
+
+	@Transactional
+	public void notParkVehicle(Long vehicleId) {
+		Vehicle vehicle = findById(vehicleId);
+		
+		vehicle.notPark();
+		
+		vehicleRepository.save(vehicle);
 	}
 
 	public void delete(Long id) {

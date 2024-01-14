@@ -21,12 +21,8 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.wilsonpedro.parking.dtos.CompanyInputDTO;
-import com.wilsonpedro.parking.dtos.ParkDTO;
 import com.wilsonpedro.parking.dtos.VehicleDTO;
-import com.wilsonpedro.parking.enums.TypeVehicle;
 import com.wilsonpedro.parking.enums.VehicleStatus;
-import com.wilsonpedro.parking.models.Address;
 import com.wilsonpedro.parking.models.Company;
 import com.wilsonpedro.parking.models.Vehicle;
 import com.wilsonpedro.parking.repositories.AddressRepository;

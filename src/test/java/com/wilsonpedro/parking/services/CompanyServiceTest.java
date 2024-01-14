@@ -143,17 +143,6 @@ class CompanyServiceTest {
 		companyService.addVehicleInVacantSpace(company, vehicle);
 		
 		assertEquals(19, company.getSpacesForCars());
-		
-//		vehicleRepository.save(vehicle);
-//		
-//		assertNotEquals(VehicleStatus.PARKED, vehicle.getStatus());
-//		
-//		companyService.parkVehicle(vehicle.getId());
-//		
-//		Vehicle vehicleFinded = vehicleRepository.findById(vehicle.getId()).get();
-//		
-//		assertEquals(VehicleStatus.PARKED, vehicleFinded.getStatus());
-		
 	}
 	
 	@Test
