@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.wilsonpedro.parking.dtos.CompanyDTO;
 import com.wilsonpedro.parking.dtos.CompanyInputDTO;
+import com.wilsonpedro.parking.dtos.CompanyMinDTO;
 import com.wilsonpedro.parking.models.Company;
 import com.wilsonpedro.parking.services.CompanyService;
 
@@ -36,8 +37,8 @@ public class CompanyController {
 	@GetMapping
 	public ResponseEntity findAll() {
 		List<Company> list = companyService.findAll();
-		//List<CompanyMinDTO> dtos = list.stream().map(x -> new CompanyMinDTO(x)).toList();
-		return ResponseEntity.ok().body(list);
+		List<CompanyMinDTO> dtos = list.stream().map(x -> new CompanyMinDTO(x)).toList();
+		return ResponseEntity.ok().body(dtos);
 	}
 	
 	@GetMapping("/{id}")
