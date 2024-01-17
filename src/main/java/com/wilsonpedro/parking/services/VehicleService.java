@@ -24,11 +24,17 @@ public class VehicleService {
 	@Autowired
 	private CompanyRepository companyRepository;
 	
+	@Autowired
+	private CompanyService companyService;
+	
+	@Transactional
 	public Vehicle save(VehicleDTO vehicleDTO) {
 		Vehicle vehicle = prepareToSave(vehicleDTO);
+		companyService.addVehicleInVacantSpace(vehicle.getCompany().getId(), vehicle);
 		return vehicleRepository.save(vehicle);
 	}
-	 
+	
+	@Transactional
 	private Vehicle prepareToSave(VehicleDTO vehicleDTO) {
 		Vehicle vehicle = new Vehicle(vehicleDTO);
 		Company company = companyRepository.findById(vehicleDTO.getCompanyId()).get();
@@ -81,8 +87,17 @@ public class VehicleService {
 		vehicleRepository.save(vehicle);
 	}
 
+	@Transactional
 	public void delete(Long id) {
+		removeVehicleInVacantSpace(id);
+		
 		vehicleRepository.delete(vehicleRepository.findById(id)
 				.orElseThrow(() -> new EntityNotFoundException()));
+	}
+	
+	private void removeVehicleInVacantSpace(Long id) {
+		Vehicle vehicle = findById(id);
+		Company company = companyService.findById(vehicle.getCompany().getId());
+		companyService.removeVehicleInVacantSpace(company, vehicle);
 	}
 }

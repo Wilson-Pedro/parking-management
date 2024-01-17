@@ -26,6 +26,7 @@ import com.wilsonpedro.parking.enums.VehicleStatus;
 import com.wilsonpedro.parking.models.Company;
 import com.wilsonpedro.parking.models.Vehicle;
 import com.wilsonpedro.parking.repositories.AddressRepository;
+import com.wilsonpedro.parking.repositories.CompanyRepository;
 import com.wilsonpedro.parking.repositories.VehicleRepository;
 import com.wilsonpedro.parking.services.CompanyService;
 import com.wilsonpedro.parking.services.VehicleService;
@@ -50,6 +51,9 @@ class VehicleControllerTest {
 	CompanyService companyService;
 	
 	@Autowired
+	CompanyRepository companyRepository;
+	
+	@Autowired
 	ObjectMapper objectMapper;
 	
 	@Autowired
@@ -59,13 +63,14 @@ class VehicleControllerTest {
 	@Order(1)
 	void mustSaveTheVehcileSuccessfully() throws Exception {
 		
+		companyRepository.deleteAll();
+		
 		Company company = new Company(null, "WS-Tecnology", "14326422000166", null, 
 		"(95)2256-9123", 30, 20);
 		
 		companyService.save(company);
 		
 		Long companyId = companyService.findAll().get(0).getId();
-		
 		VehicleDTO vehicleDTO = new VehicleDTO("Chevrolet", "Onix", "Red", "MTJ-7577", "Car", "Parked", companyId);
 		
 		String jsonRequest = objectMapper.writeValueAsString(vehicleDTO);
@@ -83,6 +88,8 @@ class VehicleControllerTest {
 				.andExpect(jsonPath("$.plate", equalTo("MTJ-7577")))
 				.andExpect(jsonPath("$.type", equalTo("Car")));
 	
+		Company companyFinded = companyService.findById(companyId);
+		assertEquals(19, companyFinded.getSpacesForCars());
 		assertEquals(1, vehicleRepository.count());
 	}
 	
@@ -131,6 +138,7 @@ class VehicleControllerTest {
 		Vehicle vehicleFinded = vehicleService.findById(1L);
 		
 		assertEquals("HTJ-1234", vehicleFinded.getPlate());
+		
 	}
 	
 	@Test
@@ -176,6 +184,7 @@ class VehicleControllerTest {
 	void mustDeleteTheVehicleSuccessfully() throws Exception {
 		
 		Long id = vehicleService.findAll().get(0).getId();
+//		Vehicle  vehicle = vehicleService.findById(id);
 		
 		assertEquals(1, vehicleRepository.count());
 		
@@ -183,5 +192,9 @@ class VehicleControllerTest {
 				.andExpect(status().isNoContent());
 		
 		assertEquals(0, vehicleRepository.count());
+		
+		Long companyId = companyService.findAll().get(0).getId();
+		Company company = companyService.findById(companyId);
+		assertEquals(20, company.getSpacesForCars());
 	}
 }

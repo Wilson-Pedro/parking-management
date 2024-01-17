@@ -57,7 +57,9 @@ public class CompanyService {
 				.orElseThrow(() -> new EntityNotFoundException()));
 	}
 	
-	public void addVehicleInVacantSpace(Company company, Vehicle vehicle) {
+	public void addVehicleInVacantSpace(Long companyId, Vehicle vehicle) {
+		
+		Company company = findById(companyId);
 		
 		company.getVehicles().add(vehicle);
 		

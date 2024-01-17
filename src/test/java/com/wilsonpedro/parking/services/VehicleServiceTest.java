@@ -60,9 +60,11 @@ class VehicleServiceTest {
 		assertEquals(0, vehicleRepository.count());
 		
 		Vehicle vehicleSaved = vehicleService.save(vehicleDTO);
+		Company companyFinded = companyRepository.findById(companyId).get();
 		
 		assertNotNull(vehicleSaved.getId());
-		assertEquals(1, vehicleRepository.count());	
+		assertEquals(1, vehicleRepository.count());
+		assertEquals(19, companyFinded.getSpacesForCars());
 	}
 	
 	@Test
@@ -150,11 +152,13 @@ class VehicleServiceTest {
 	void mustDeleteTheVehicleSuccessfully() {
 		
 		Long id = vehicleService.findAll().get(0).getId();
+		Vehicle  vehicle = vehicleService.findById(id);
 		
-		assertEquals(1, vehicleRepository.count());
-		
+		assertEquals(1, vehicleRepository.count());	
 		vehicleService.delete(id);
-		
 		assertEquals(0, vehicleRepository.count());
+		
+		Company company = companyRepository.findById(vehicle.getCompany().getId()).get();
+		assertEquals(20, company.getSpacesForCars());
 	}
 }

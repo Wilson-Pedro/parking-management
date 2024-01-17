@@ -140,7 +140,7 @@ class CompanyServiceTest {
 		
 		assertEquals(20, company.getSpacesForCars());
 		
-		companyService.addVehicleInVacantSpace(company, vehicle);
+		companyService.addVehicleInVacantSpace(id, vehicle);
 		
 		assertEquals(19, company.getSpacesForCars());
 	}
