@@ -35,7 +35,8 @@ public class VehicleController {
 	@GetMapping
 	public ResponseEntity findAll() {
 		List<Vehicle> list = vehicleService.findAll();
-		return ResponseEntity.ok(list);
+		List<VehicleDTO> dtos = list.stream().map(x -> new VehicleDTO(x)).toList();
+		return ResponseEntity.ok(dtos);
 	}
 	
 	@GetMapping("/{id}")
