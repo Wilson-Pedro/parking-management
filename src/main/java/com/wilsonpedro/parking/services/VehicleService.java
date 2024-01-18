@@ -7,12 +7,12 @@ import org.springframework.stereotype.Service;
 
 import com.wilsonpedro.parking.dtos.VehicleDTO;
 import com.wilsonpedro.parking.enums.TypeVehicle;
+import com.wilsonpedro.parking.exceptions.NotFoundException;
 import com.wilsonpedro.parking.models.Company;
 import com.wilsonpedro.parking.models.Vehicle;
 import com.wilsonpedro.parking.repositories.CompanyRepository;
 import com.wilsonpedro.parking.repositories.VehicleRepository;
 
-import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 
 @Service
@@ -49,7 +49,7 @@ public class VehicleService {
 	
 	public Vehicle findById(Long id) {
 		return vehicleRepository.findById(id)
-				.orElseThrow(() -> new EntityNotFoundException());
+				.orElseThrow(() -> new NotFoundException(id));
 	}
 
 	public Vehicle update(VehicleDTO vehicleDTO, Long id) {
@@ -66,7 +66,7 @@ public class VehicleService {
 					vehicleUpdated.setType(TypeVehicle.toEnum(vehicleDTO.getType()));
 					vehicleUpdated.setCompany(company);
 					return vehicleRepository.save(vehicleUpdated);
-				}).orElseThrow(() -> new EntityNotFoundException());
+				}).orElseThrow(() -> new NotFoundException(id));
 	}
 	
 	@Transactional
@@ -92,7 +92,7 @@ public class VehicleService {
 		removeVehicleInVacantSpace(id);
 		
 		vehicleRepository.delete(vehicleRepository.findById(id)
-				.orElseThrow(() -> new EntityNotFoundException()));
+				.orElseThrow(() -> new NotFoundException(id)));
 	}
 	
 	private void removeVehicleInVacantSpace(Long id) {

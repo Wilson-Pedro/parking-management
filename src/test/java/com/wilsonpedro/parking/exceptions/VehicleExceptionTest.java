@@ -7,13 +7,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import com.wilsonpedro.parking.dtos.VehicleDTO;
-import com.wilsonpedro.parking.enums.TypeVehicle;
 import com.wilsonpedro.parking.models.Company;
 import com.wilsonpedro.parking.repositories.CompanyRepository;
-import com.wilsonpedro.parking.services.CompanyService;
 import com.wilsonpedro.parking.services.VehicleService;
-
-import jakarta.persistence.EntityNotFoundException;
 
 @SpringBootTest
 class VehicleExceptionTest {
@@ -27,7 +23,7 @@ class VehicleExceptionTest {
 	@Test
 	void EntityNotFoundExceptionWhenTryingToFetchVehicle() {
 		
-		assertThrows(EntityNotFoundException.class, () -> vehicleService.findById(70L));
+		assertThrows(NotFoundException.class, () -> vehicleService.findById(70L));
 	}
 	
 	@Test
@@ -41,13 +37,13 @@ class VehicleExceptionTest {
 		VehicleDTO vehicleDTO = new VehicleDTO
 				("Chevrolet", "Onix", "Red", "MTJ-7577", "Car", "Parked", company.getId());
 		
-		assertThrows(EntityNotFoundException.class, () -> vehicleService.update(vehicleDTO, 70L));
+		assertThrows(NotFoundException.class, () -> vehicleService.update(vehicleDTO, 70L));
 	}
 	
 	@Test
 	void EntityNotFoundExceptionWhenTryingToDeleteVehicle() {
 		
-		assertThrows(EntityNotFoundException.class, () -> vehicleService.delete(70L));
+		assertThrows(NotFoundException.class, () -> vehicleService.delete(70L));
 	}
 
 }

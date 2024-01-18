@@ -9,10 +9,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import com.wilsonpedro.parking.dtos.CompanyInputDTO;
 import com.wilsonpedro.parking.services.CompanyService;
 
-import jakarta.persistence.EntityNotFoundException;
-
 @SpringBootTest
-class CompanyServiceExceptionTest {
+class CompanyExceptionTest {
 	
 	@Autowired
 	CompanyService companyService;
@@ -20,7 +18,7 @@ class CompanyServiceExceptionTest {
 	@Test
 	void EntityNotFoundExceptionWhenTryingToFetchCompany() {
 		
-		assertThrows(EntityNotFoundException.class, () -> companyService.findById(70L));
+		assertThrows(NotFoundException.class, () -> companyService.findById(70L));
 	}
 	
 	@Test
@@ -29,13 +27,13 @@ class CompanyServiceExceptionTest {
 		CompanyInputDTO company = new CompanyInputDTO("WS-Tecnology", "14326422000166", 
 				"(95)2256-9123", 30, 20);
 		
-		assertThrows(EntityNotFoundException.class, () -> companyService.update(company, 70L));
+		assertThrows(NotFoundException.class, () -> companyService.update(company, 70L));
 	}
 
 	@Test
 	void EntityNotFoundExceptionWhenTryingToDeleteCompany() {
 		
-		assertThrows(EntityNotFoundException.class, () -> companyService.delete(70L));
+		assertThrows(NotFoundException.class, () -> companyService.delete(70L));
 		
 	}
 }

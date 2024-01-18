@@ -6,11 +6,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.wilsonpedro.parking.dtos.AddressDTO;
+import com.wilsonpedro.parking.exceptions.NotFoundException;
 import com.wilsonpedro.parking.models.Address;
 import com.wilsonpedro.parking.models.Company;
 import com.wilsonpedro.parking.repositories.AddressRepository;
-
-import jakarta.persistence.EntityNotFoundException;
 
 @Service
 public class AddressService {
@@ -39,7 +38,7 @@ public class AddressService {
 
 	public Address findById(Long id) {
 		return addressRepository.findById(id)
-				.orElseThrow(() -> new EntityNotFoundException());
+				.orElseThrow(() -> new NotFoundException(id));
 	}
 
 	public Address update(AddressDTO addressDTO, Long id) {
@@ -51,11 +50,11 @@ public class AddressService {
 					addressUpdated.setNeighborhood(addressDTO.getNeighborhood());
 					addressUpdated.setCity(addressDTO.getCity());
 					return addressRepository.save(addressUpdated);
-				}).orElseThrow(() -> new EntityNotFoundException());
+				}).orElseThrow(() -> new NotFoundException(id));
 	}
 
 	public void delete(Long id) {
 		addressRepository.delete(addressRepository.findById(id)
-				.orElseThrow(() -> new EntityNotFoundException()));
+				.orElseThrow(() -> new NotFoundException(id)));
 	}
 }

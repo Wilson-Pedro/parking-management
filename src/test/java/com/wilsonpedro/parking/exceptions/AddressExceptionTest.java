@@ -9,8 +9,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import com.wilsonpedro.parking.dtos.AddressDTO;
 import com.wilsonpedro.parking.services.AddressService;
 
-import jakarta.persistence.EntityNotFoundException;
-
 @SpringBootTest
 class AddressExceptionTest {
 	
@@ -20,7 +18,7 @@ class AddressExceptionTest {
 	@Test
 	void EntityNotFoundExceptionWhenTryingToFetchAddress() {
 		
-		assertThrows(EntityNotFoundException.class, () -> addressService.findById(70L));
+		assertThrows(NotFoundException.class, () -> addressService.findById(70L));
 	}
 	
 	@Test
@@ -28,13 +26,13 @@ class AddressExceptionTest {
 		
 		AddressDTO addressDTO = new AddressDTO("52220-251", "Rua das Ameixas", "Flores", "Minas-Gerais", 1L);
 		
-		assertThrows(EntityNotFoundException.class, () -> addressService.update(addressDTO, 70L));
+		assertThrows(NotFoundException.class, () -> addressService.update(addressDTO, 70L));
 	}
 
 	@Test
 	void EntityNotFoundExceptionWhenTryingToDeleteAddress() {
 		
-		assertThrows(EntityNotFoundException.class, () -> addressService.delete(70L));
+		assertThrows(NotFoundException.class, () -> addressService.delete(70L));
 		
 	}
 }

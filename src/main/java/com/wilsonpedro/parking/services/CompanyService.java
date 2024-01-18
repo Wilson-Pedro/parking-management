@@ -7,11 +7,11 @@ import org.springframework.stereotype.Service;
 
 import com.wilsonpedro.parking.dtos.CompanyInputDTO;
 import com.wilsonpedro.parking.enums.TypeVehicle;
+import com.wilsonpedro.parking.exceptions.NotFoundException;
 import com.wilsonpedro.parking.models.Company;
 import com.wilsonpedro.parking.models.Vehicle;
 import com.wilsonpedro.parking.repositories.CompanyRepository;
 
-import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 
 @Service
@@ -35,7 +35,7 @@ public class CompanyService {
 	}
 	
 	public Company findById(Long id) {
-		return companyRepository.findById(id).orElseThrow(() -> new EntityNotFoundException());
+		return companyRepository.findById(id).orElseThrow(() -> new NotFoundException(id));
 	}
 	
 	@Transactional
@@ -49,12 +49,12 @@ public class CompanyService {
 					companyUpdated.setSpacesForMotorbikes(companyInput.getSpacesForMotorbikes());
 					companyUpdated.setSpacesForCars(companyInput.getSpacesForCars());
 					return save(companyUpdated);
-				}).orElseThrow(() -> new EntityNotFoundException());
+				}).orElseThrow(() -> new NotFoundException(id));
 	}
 	
 	public void delete(Long id) {
 		companyRepository.delete(companyRepository.findById(id)
-				.orElseThrow(() -> new EntityNotFoundException()));
+				.orElseThrow(() -> new NotFoundException(id)));
 	}
 	
 	public void addVehicleInVacantSpace(Long companyId, Vehicle vehicle) {
