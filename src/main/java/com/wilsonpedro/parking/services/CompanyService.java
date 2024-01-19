@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import com.wilsonpedro.parking.dtos.CompanyInputDTO;
 import com.wilsonpedro.parking.enums.TypeVehicle;
+import com.wilsonpedro.parking.exceptions.ExistingCnpjException;
 import com.wilsonpedro.parking.exceptions.NotFoundException;
 import com.wilsonpedro.parking.models.Company;
 import com.wilsonpedro.parking.models.Vehicle;
@@ -22,10 +23,12 @@ public class CompanyService {
 	
 	@Transactional
 	public Company save(Company company) {
+		validateCnpj(company.getCnpj());
 		return companyRepository.save(company);
 	} 
-	
+
 	public Company save(CompanyInputDTO companyInputDTO) {
+		validateCnpj(companyInputDTO.getCnpj());
 		Company company = new Company(companyInputDTO);
 		return save(company);
 	}
@@ -48,7 +51,7 @@ public class CompanyService {
 					companyUpdated.setPhone(companyInput.getPhone());
 					companyUpdated.setSpacesForMotorbikes(companyInput.getSpacesForMotorbikes());
 					companyUpdated.setSpacesForCars(companyInput.getSpacesForCars());
-					return save(companyUpdated);
+					return companyRepository.save(companyUpdated);
 				}).orElseThrow(() -> new NotFoundException(id));
 	}
 	
@@ -69,7 +72,7 @@ public class CompanyService {
 			company.decrementOneInTheMotorbikesSpace();
 		}
 		
-		save(company);
+		update(new CompanyInputDTO(company), companyId);
 	}
 	
 	public void removeVehicleInVacantSpace(Company company, Vehicle vehicle) {
@@ -80,6 +83,11 @@ public class CompanyService {
 			company.increaseOneInTheMotorbikesSpace();
 		}
 		
-		save(company);
+		update(new CompanyInputDTO(company), company.getId());
+	}
+	
+	private void validateCnpj(String cnpj) {
+		if(companyRepository.existsByCnpj(cnpj))
+			throw new ExistingCnpjException(cnpj);
 	}
 }

@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import com.wilsonpedro.parking.dtos.VehicleDTO;
 import com.wilsonpedro.parking.enums.TypeVehicle;
+import com.wilsonpedro.parking.exceptions.ExistingPlateException;
 import com.wilsonpedro.parking.exceptions.NotFoundException;
 import com.wilsonpedro.parking.models.Company;
 import com.wilsonpedro.parking.models.Vehicle;
@@ -29,11 +30,12 @@ public class VehicleService {
 	
 	@Transactional
 	public Vehicle save(VehicleDTO vehicleDTO) {
+		validatePlate(vehicleDTO.getPlate());
 		Vehicle vehicle = prepareToSave(vehicleDTO);
 		companyService.addVehicleInVacantSpace(vehicle.getCompany().getId(), vehicle);
 		return vehicleRepository.save(vehicle);
 	}
-	
+
 	@Transactional
 	private Vehicle prepareToSave(VehicleDTO vehicleDTO) {
 		Vehicle vehicle = new Vehicle(vehicleDTO);
@@ -99,5 +101,11 @@ public class VehicleService {
 		Vehicle vehicle = findById(id);
 		Company company = companyService.findById(vehicle.getCompany().getId());
 		companyService.removeVehicleInVacantSpace(company, vehicle);
+	}
+	
+	private void validatePlate(String plate) {
+		if(vehicleRepository.existsByPlate(plate)) {
+			throw new ExistingPlateException(plate);
+		}
 	}
 }

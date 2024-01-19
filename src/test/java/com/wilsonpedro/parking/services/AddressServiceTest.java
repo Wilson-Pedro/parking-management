@@ -37,7 +37,7 @@ class AddressServiceTest {
 		
 		addressRepository.deleteAll();
 		
-		CompanyInputDTO companyInputDto = new CompanyInputDTO("WS-Tecnology", "14326422000166", 
+		CompanyInputDTO companyInputDto = new CompanyInputDTO("WS-Tecnology", "01954183000147", 
 				"(95)2256-9123", 30, 20);
 		
 		companyService.save(companyInputDto);

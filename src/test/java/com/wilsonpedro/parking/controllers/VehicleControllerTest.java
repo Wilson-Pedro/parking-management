@@ -65,13 +65,13 @@ class VehicleControllerTest {
 		
 		companyRepository.deleteAll();
 		
-		Company company = new Company(null, "WS-Tecnology", "14326422000166", null, 
-		"(95)2256-9123", 30, 20);
+		Company company = new Company(1L, "G3-Tecnology", "51324317000114", null, 
+		"(95=8)2200-9003", 30, 20);
 		
 		companyService.save(company);
 		
-		Long companyId = companyService.findAll().get(0).getId();
-		VehicleDTO vehicleDTO = new VehicleDTO("Chevrolet", "Onix", "Red", "MTJ-7577", "Car", "Parked", companyId);
+		//Long companyId = companyService.findAll().get(0).getId();
+		VehicleDTO vehicleDTO = new VehicleDTO("Chevrolet", "Onix", "Red", "GTT-7227", "Car", "Parked", company.getId());
 		
 		String jsonRequest = objectMapper.writeValueAsString(vehicleDTO);
 		
@@ -85,10 +85,10 @@ class VehicleControllerTest {
 				.andExpect(jsonPath("$.brand", equalTo("Chevrolet")))
 				.andExpect(jsonPath("$.model", equalTo("Onix")))
 				.andExpect(jsonPath("$.color", equalTo("Red")))
-				.andExpect(jsonPath("$.plate", equalTo("MTJ-7577")))
+				.andExpect(jsonPath("$.plate", equalTo("GTT-7227")))
 				.andExpect(jsonPath("$.type", equalTo("Car")));
 	
-		Company companyFinded = companyService.findById(companyId);
+		Company companyFinded = companyService.findById(company.getId());
 		assertEquals(19, companyFinded.getSpacesForCars());
 		assertEquals(1, vehicleRepository.count());
 	}
@@ -111,7 +111,7 @@ class VehicleControllerTest {
 			.andExpect(jsonPath("$.brand", equalTo("Chevrolet")))
 			.andExpect(jsonPath("$.model", equalTo("Onix")))
 			.andExpect(jsonPath("$.color", equalTo("Red")))
-			.andExpect(jsonPath("$.plate", equalTo("MTJ-7577")))
+			.andExpect(jsonPath("$.plate", equalTo("GTT-7227")))
 			.andExpect(jsonPath("$.type", equalTo("Car")));
 	}
 	

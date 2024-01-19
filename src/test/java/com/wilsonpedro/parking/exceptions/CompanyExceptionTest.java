@@ -14,6 +14,18 @@ class CompanyExceptionTest {
 	
 	@Autowired
 	CompanyService companyService;
+	
+	@Test
+	void ExistingCnpjExceptionWhenTryingToSaveCompany() {
+		
+		companyService.save(new CompanyInputDTO
+				("WS-Tecnology", "14326422000166", "(95)2256-9123", 30, 20));
+		
+		CompanyInputDTO company = new CompanyInputDTO("RDS-Tecnology", "14326422000166", 
+				"(95)1250-0723", 30, 20);
+		
+		assertThrows(ExistingCnpjException.class, () -> companyService.save(company));
+	}
 
 	@Test
 	void EntityNotFoundExceptionWhenTryingToFetchCompany() {
