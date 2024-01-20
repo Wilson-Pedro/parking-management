@@ -46,6 +46,36 @@ class VehicleExceptionTest {
 	}
 	
 	@Test
+	void LimitOfSpacesExceptionWhenTryingToSaveACar() {
+		
+		Company company = new Company(1L, "WS-Tecnology", "60221122000333", null, 
+				"(95)2256-9123", 30, 0);
+		
+		companyRepository.save(company);
+		
+		VehicleDTO vehicleDTO = new VehicleDTO
+				("Chevrolet", "Unix", "Black", "FFJ-1121", "Car", "Parked", company.getId());
+		
+		assertThrows(LimitOfSpacesException.class, () -> vehicleService.save(vehicleDTO));
+		
+	}
+	
+	@Test
+	void LimitOfSpacesExceptionWhenTryingToSaveAMotobike() {
+		
+		Company company = new Company(1L, "WS-Tecnology", "60228899000777", null, 
+				"(95)2006-9003", 0, 20);
+		
+		companyRepository.save(company);
+		
+		VehicleDTO vehicleDTO = new VehicleDTO
+				("Chevrolet", "Unix", "Black", "HHJ-8888", "Motobike", "Parked", company.getId());
+		
+		assertThrows(LimitOfSpacesException.class, () -> vehicleService.save(vehicleDTO));
+		
+	}
+	
+	@Test
 	void EntityNotFoundExceptionWhenTryingToFetchVehicle() {
 		
 		assertThrows(NotFoundException.class, () -> vehicleService.findById(70L));

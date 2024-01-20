@@ -10,6 +10,7 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 
 import com.wilsonpedro.parking.exceptions.ExistingCnpjException;
 import com.wilsonpedro.parking.exceptions.ExistingPlateException;
+import com.wilsonpedro.parking.exceptions.LimitOfSpacesException;
 import com.wilsonpedro.parking.exceptions.NotFoundException;
 
 @ControllerAdvice
@@ -48,6 +49,19 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler{
 		
 		Problam problam = new Problam();
 		problam.setTitle("Existing CNPJ");
+		problam.setCode(status.value());
+		problam.setDateTime(OffsetDateTime.now());
+		
+		return ResponseEntity.status(status).body(problam);
+	}
+	
+	@ExceptionHandler(LimitOfSpacesException.class)
+	public ResponseEntity<Problam> limitOfSpaces() {
+		
+		HttpStatus status = HttpStatus.BAD_REQUEST;
+		
+		Problam problam = new Problam();
+		problam.setTitle("There is no more spaces to park in this Company!");
 		problam.setCode(status.value());
 		problam.setDateTime(OffsetDateTime.now());
 		
