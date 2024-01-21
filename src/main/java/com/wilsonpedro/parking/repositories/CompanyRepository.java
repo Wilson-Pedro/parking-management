@@ -7,4 +7,6 @@ import com.wilsonpedro.parking.models.Company;
 public interface CompanyRepository extends JpaRepository<Company, Long>{
 
 	boolean existsByCnpj(String cnpj);
+	
+	boolean existsByPhone(String phone);
 }
