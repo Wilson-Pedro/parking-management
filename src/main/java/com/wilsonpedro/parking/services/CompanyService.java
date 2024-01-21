@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import com.wilsonpedro.parking.dtos.CompanyInputDTO;
 import com.wilsonpedro.parking.enums.TypeVehicle;
 import com.wilsonpedro.parking.exceptions.ExistingCnpjException;
+import com.wilsonpedro.parking.exceptions.ExistingCompanyNameException;
 import com.wilsonpedro.parking.exceptions.ExistingPhoneException;
 import com.wilsonpedro.parking.exceptions.NotFoundException;
 import com.wilsonpedro.parking.models.Company;
@@ -24,14 +25,12 @@ public class CompanyService {
 	
 	@Transactional
 	public Company save(Company company) {
-		validateCnpj(company.getCnpj());
-		validadePhone(company.getPhone());
+		validateCompanay(company);
 		return companyRepository.save(company);
 	}
 
 	public Company save(CompanyInputDTO companyInputDTO) {
-		validateCnpj(companyInputDTO.getCnpj());
-		validadePhone(companyInputDTO.getPhone());
+		validateCompanay(new Company(companyInputDTO));
 		Company company = new Company(companyInputDTO);
 		return save(company);
 	}
@@ -89,13 +88,24 @@ public class CompanyService {
 		update(new CompanyInputDTO(company), company.getId());
 	}
 	
+	private void validateCompanay(Company company) {
+		validateCnpj(company.getCnpj());
+		validatePhone(company.getPhone());
+		validateName(company.getName());
+	}
+	
 	private void validateCnpj(String cnpj) {
 		if(companyRepository.existsByCnpj(cnpj))
 			throw new ExistingCnpjException(cnpj);
 	}
 	
-	private void validadePhone(String phone) {
+	private void validatePhone(String phone) {
 		if(companyRepository.existsByPhone(phone))
 			throw new ExistingPhoneException();
+	}
+	
+	private void validateName(String name) {
+		if(companyRepository.existsByName(name))
+			throw new ExistingCompanyNameException();
 	}
 }

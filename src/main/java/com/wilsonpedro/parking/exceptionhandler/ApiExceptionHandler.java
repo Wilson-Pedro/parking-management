@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 import com.wilsonpedro.parking.exceptions.ExistingCnpjException;
+import com.wilsonpedro.parking.exceptions.ExistingCompanyNameException;
 import com.wilsonpedro.parking.exceptions.ExistingPhoneException;
 import com.wilsonpedro.parking.exceptions.ExistingPlateException;
 import com.wilsonpedro.parking.exceptions.LimitOfSpacesException;
@@ -76,6 +77,19 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler{
 		
 		Problam problam = new Problam();
 		problam.setTitle("Existing phone!");
+		problam.setCode(status.value());
+		problam.setDateTime(OffsetDateTime.now());
+		
+		return ResponseEntity.status(status).body(problam);
+	}
+	
+	@ExceptionHandler(ExistingCompanyNameException.class)
+	public ResponseEntity<Problam> existingCompanyName() {
+		
+		HttpStatus status = HttpStatus.BAD_REQUEST;
+		
+		Problam problam = new Problam();
+		problam.setTitle("Existing Company name!");
 		problam.setCode(status.value());
 		problam.setDateTime(OffsetDateTime.now());
 		

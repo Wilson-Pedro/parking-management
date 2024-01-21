@@ -16,10 +16,22 @@ class CompanyExceptionTest {
 	CompanyService companyService;
 	
 	@Test
+	void ExistingCompanyNameExceptionWhenTryingToSaveCompany() {
+		
+		companyService.save(new CompanyInputDTO
+				("WS-Tecnology", "54077018000110", "(95)2464-7378", 30, 20));
+		
+		CompanyInputDTO company = new CompanyInputDTO("WS-Tecnology", "14708332000130", 
+				"(95)2754-1102", 30, 20);
+		
+		assertThrows(ExistingCompanyNameException.class, () -> companyService.save(company));
+	}
+	
+	@Test
 	void ExistingPhoneExceptionWhenTryingToSaveCompany() {
 		
 		companyService.save(new CompanyInputDTO
-				("WS-Tecnology", "85300119000132", "(95)2256-9123", 30, 20));
+				("C3-Tecnology", "85300119000132", "(95)2256-9123", 30, 20));
 		
 		CompanyInputDTO company = new CompanyInputDTO("RDS-Tecnology", "25931995000135", 
 				"(95)2256-9123", 30, 20);
@@ -31,9 +43,9 @@ class CompanyExceptionTest {
 	void ExistingCnpjExceptionWhenTryingToSaveCompany() {
 		
 		companyService.save(new CompanyInputDTO
-				("WS-Tecnology", "14326422000166", "(79)3666-6386", 30, 20));
+				("WA-Tecnology", "14326422000166", "(79)3666-6386", 30, 20));
 		
-		CompanyInputDTO company = new CompanyInputDTO("RDS-Tecnology", "14326422000166", 
+		CompanyInputDTO company = new CompanyInputDTO("WB-Tecnology", "14326422000166", 
 				"(88)2511-4922", 30, 20);
 		
 		assertThrows(ExistingCnpjException.class, () -> companyService.save(company));
