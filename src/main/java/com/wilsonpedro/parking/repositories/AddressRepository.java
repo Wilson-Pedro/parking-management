@@ -6,4 +6,6 @@ import com.wilsonpedro.parking.models.Address;
 
 public interface AddressRepository extends JpaRepository<Address, Long>{
 
+	boolean existsByCep(String cep);
+	
 }

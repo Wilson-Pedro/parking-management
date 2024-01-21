@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.wilsonpedro.parking.dtos.AddressDTO;
+import com.wilsonpedro.parking.exceptions.ExistingCepException;
 import com.wilsonpedro.parking.exceptions.NotFoundException;
 import com.wilsonpedro.parking.models.Address;
 import com.wilsonpedro.parking.models.Company;
@@ -21,6 +22,7 @@ public class AddressService {
 	private CompanyService companyService;
 	
 	public Address save(AddressDTO addressDto) {
+		validateCep(addressDto.getCep());
 		Address address = toEntity(addressDto);
 		return addressRepository.save(address);
 	}
@@ -56,5 +58,10 @@ public class AddressService {
 	public void delete(Long id) {
 		addressRepository.delete(addressRepository.findById(id)
 				.orElseThrow(() -> new NotFoundException(id)));
+	}
+	
+	private void validateCep(String cep) {
+		if(addressRepository.existsByCep(cep))
+			throw new ExistingCepException(cep);
 	}
 }
