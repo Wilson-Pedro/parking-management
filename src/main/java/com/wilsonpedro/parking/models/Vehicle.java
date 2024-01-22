@@ -1,11 +1,15 @@
 package com.wilsonpedro.parking.models;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.wilsonpedro.parking.dtos.VehicleDTO;
 import com.wilsonpedro.parking.enums.TypeVehicle;
 import com.wilsonpedro.parking.enums.VehicleStatus;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -13,6 +17,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
 @Entity
@@ -32,6 +37,10 @@ public class Vehicle {
 	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "company_id")
 	private Company company;
+	
+	@JsonIgnore
+	@OneToMany(mappedBy="vehicle", orphanRemoval = true, cascade = CascadeType.ALL)
+	private List<Register> registers = new ArrayList<>();
 	
 	public Vehicle() {
 	}
@@ -118,6 +127,10 @@ public class Vehicle {
 
 	public void setCompany(Company company) {
 		this.company = company;
+	}
+
+	public List<Register> getRegisters() {
+		return registers;
 	}
 
 	public void park() {
