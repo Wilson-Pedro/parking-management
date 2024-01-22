@@ -5,7 +5,8 @@ import java.util.stream.Stream;
 public enum EntranceAndExit {
 
 	ENTRANCE(1, "Entrance"),
-	EXIT(2, "Exit");
+	EXIT(2, "Exit"),
+	UNDEFINED(3, "Undefined");
 	
 	private Integer cod;
 	

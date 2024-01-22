@@ -32,13 +32,6 @@ public class Register {
 	public Register() {
 	}
 
-	public Register(Long id, Vehicle vehicle, EntranceAndExit entranceAndExit, LocalDateTime localDateTime) {
-		this.id = id;
-		this.vehicle = vehicle;
-		this.entranceAndExit = entranceAndExit;
-		this.localDateTime = localDateTime;
-	}
-
 	public Long getId() {
 		return id;
 	}

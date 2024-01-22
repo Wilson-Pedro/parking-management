@@ -29,6 +29,9 @@ public class VehicleService {
 	@Autowired
 	private CompanyService companyService;
 	
+	@Autowired
+	private RegisterService registerService;
+	
 	@Transactional
 	public Vehicle save(VehicleDTO vehicleDTO) {
 		validatePlate(vehicleDTO.getPlate());
@@ -79,6 +82,7 @@ public class VehicleService {
 		
 		vehicle.park();
 		
+		registerService.save(vehicle);
 		vehicleRepository.save(vehicle);
 	}
 
@@ -88,6 +92,7 @@ public class VehicleService {
 		
 		vehicle.notPark();
 		
+		registerService.save(vehicle);
 		vehicleRepository.save(vehicle);
 	}
 
