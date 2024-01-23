@@ -180,7 +180,7 @@ class VehicleControllerTest {
 	
 	@Test
 	@Order(7)
-	void mustgetSummarySuccessfully() throws Exception {
+	void mustGetSummarySuccessfully() throws Exception {
 		
 		Long id = vehicleService.findAll().get(0).getId();
 		vehicleService.notParkVehicle(id);
@@ -193,17 +193,37 @@ class VehicleControllerTest {
 	}
 	
 	@Test
+	@Order(8)
+	void mustGetSummaryByVehicleIdSuccessfully() throws Exception {
+		
+		Long companyId = companyRepository.findAll().get(0).getId();
+		
+		var vehicleDTO = new VehicleDTO
+				("Chevrolet", "Unix", "Black", "CDZ-4321", "Motobike", "Parked", companyId);
+		vehicleService.save(vehicleDTO);
+		
+		Long id = vehicleService.findAll().get(1).getId();
+		vehicleService.parkVehicle(id);
+		
+		mockMvc.perform(get("/vehicles/{id}/summary", 2L))
+			.andExpect(status().isOk())
+			.andExpect(jsonPath("$.numberOfRecords", equalTo(1)))
+			.andExpect(jsonPath("$.inputQuantity", equalTo(1)))
+			.andExpect(jsonPath("$.outputQuantity", equalTo(0)));
+	}
+	
+	@Test
 	@Order(9)
 	void mustDeleteTheVehicleSuccessfully() throws Exception {
 		
 		Long id = vehicleService.findAll().get(0).getId();
 		
-		assertEquals(1, vehicleRepository.count());
+		assertEquals(2, vehicleRepository.count());
 		
 		mockMvc.perform(delete("/vehicles/{id}", id))
 				.andExpect(status().isNoContent());
 		
-		assertEquals(0, vehicleRepository.count());
+		assertEquals(1, vehicleRepository.count());
 		
 		Long companyId = companyService.findAll().get(0).getId();
 		Company company = companyService.findById(companyId);

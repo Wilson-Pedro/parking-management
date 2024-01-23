@@ -150,7 +150,7 @@ class VehicleServiceTest {
 	
 	@Test
 	@Order(7)
-	void SummaryTest() {
+	void mustGetSummaryTest() {
 		
 		Long id = vehicleService.findAll().get(0).getId();
 		vehicleService.parkVehicle(id);
@@ -164,14 +164,34 @@ class VehicleServiceTest {
 	
 	@Test
 	@Order(8)
+	void mustGetSummaryByVehicleIdTest() {
+		
+		Long companyId = companyRepository.findAll().get(0).getId();
+		
+		var vehicleDTO = new VehicleDTO
+				("Chevrolet", "Unix", "Black", "ABC-1234", "Motobike", "Parked", companyId);
+		vehicleService.save(vehicleDTO);
+		
+		Long id = vehicleService.findAll().get(1).getId();
+		vehicleService.parkVehicle(id);
+		
+		Summary summary = vehicleService.getSummaryByVehicleId(id);
+		
+		assertEquals(1, summary.getNumberOfRecords());
+		assertEquals(1, summary.getInputQuantity());
+		assertEquals(0, summary.getOutputQuantity());
+	}
+	
+	@Test
+	@Order(9)
 	void mustDeleteTheVehicleSuccessfully() {
 		
 		Long id = vehicleService.findAll().get(0).getId();
 		Vehicle  vehicle = vehicleService.findById(id);
 		
-		assertEquals(1, vehicleRepository.count());	
+		assertEquals(2, vehicleRepository.count());	
 		vehicleService.delete(id);
-		assertEquals(0, vehicleRepository.count());
+		assertEquals(1, vehicleRepository.count());
 		
 		Company company = companyRepository.findById(vehicle.getCompany().getId()).get();
 		assertEquals(20, company.getSpacesForCars());

@@ -1,6 +1,7 @@
 package com.wilsonpedro.parking.services;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -132,12 +133,34 @@ public class VehicleService {
 
 	public Summary getSummary() {
 		Summary summary = new Summary();
+		
 		var list = registerService.finAll();
 		var listDto = list.stream().map(x -> new RegisterDTO(x)).toList();
+		
 		summary.setRegisters(listDto);
 		summary.setNumberOfRecords(list.size());
 		summary.setInputQuantity(summary.count(list, EntranceAndExit.ENTRANCE));
 		summary.setOutputQuantity(summary.count(list, EntranceAndExit.EXIT));
+		
+		return summary;
+	}
+	
+	public Summary getSummaryByVehicleId(Long vehicleId) {
+		Summary summary = new Summary();
+		
+		findById(vehicleId);
+		
+		var list = registerService.finAll().stream()
+				.filter(register -> register.getVehicle().getId().equals(vehicleId))
+				.collect(Collectors.toList());
+		
+		var listDto = list.stream().map(x -> new RegisterDTO(x)).toList();
+		
+		summary.setRegisters(listDto);
+		summary.setNumberOfRecords(list.size());
+		summary.setInputQuantity(summary.count(list, EntranceAndExit.ENTRANCE));
+		summary.setOutputQuantity(summary.count(list, EntranceAndExit.EXIT));
+		
 		return summary;
 	}
 }

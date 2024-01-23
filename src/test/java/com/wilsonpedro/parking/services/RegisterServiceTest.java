@@ -33,6 +33,8 @@ class RegisterServiceTest {
 	@Test
 	@Order(1)
 	void mustSaveTheRegisterSuccessfully() {
+		registerRepository.deleteAll();
+		
 		assertEquals(0, registerRepository.count());
 		
 		Vehicle vehicle = new Vehicle(1L, "Chevrolet", "Onix", "Green", "HLM-8822", TypeVehicle.MOTORBIKE, VehicleStatus.UNDEFINED);

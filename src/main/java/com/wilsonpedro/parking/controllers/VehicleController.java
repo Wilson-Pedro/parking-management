@@ -72,6 +72,12 @@ public class VehicleController {
 		return ResponseEntity.ok(summary);
 	}
 	
+	@GetMapping("/{id}/summary")
+	public ResponseEntity summaryByVehicle(@PathVariable Long id) {
+		Summary summary = vehicleService.getSummaryByVehicleId(id);
+		return ResponseEntity.ok(summary);
+	}
+	
 	@DeleteMapping("/{id}")
 	public ResponseEntity delete(@PathVariable Long id) {
 		vehicleService.delete(id);
