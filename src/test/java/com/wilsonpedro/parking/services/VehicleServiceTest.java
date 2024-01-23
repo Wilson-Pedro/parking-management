@@ -13,6 +13,7 @@ import org.junit.jupiter.api.TestMethodOrder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import com.wilsonpedro.parking.dtos.Summary;
 import com.wilsonpedro.parking.dtos.VehicleDTO;
 import com.wilsonpedro.parking.enums.TypeVehicle;
 import com.wilsonpedro.parking.enums.VehicleStatus;
@@ -149,6 +150,20 @@ class VehicleServiceTest {
 	
 	@Test
 	@Order(7)
+	void SummaryTest() {
+		
+		Long id = vehicleService.findAll().get(0).getId();
+		vehicleService.parkVehicle(id);
+		
+		Summary summary = vehicleService.getSummary();
+		
+		assertEquals(3, summary.getNumberOfRecords());
+		assertEquals(2, summary.getInputQuantity());
+		assertEquals(1, summary.getOutputQuantity());
+	}
+	
+	@Test
+	@Order(8)
 	void mustDeleteTheVehicleSuccessfully() {
 		
 		Long id = vehicleService.findAll().get(0).getId();

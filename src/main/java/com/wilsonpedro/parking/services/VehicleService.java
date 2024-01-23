@@ -5,7 +5,10 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.wilsonpedro.parking.dtos.RegisterDTO;
+import com.wilsonpedro.parking.dtos.Summary;
 import com.wilsonpedro.parking.dtos.VehicleDTO;
+import com.wilsonpedro.parking.enums.EntranceAndExit;
 import com.wilsonpedro.parking.enums.TypeVehicle;
 import com.wilsonpedro.parking.exceptions.ExistingPlateException;
 import com.wilsonpedro.parking.exceptions.LimitOfSpacesException;
@@ -125,5 +128,16 @@ public class VehicleService {
 			if(company.getSpacesForMotorbikes() == 0) 
 				throw new LimitOfSpacesException();
 		}
+	}
+
+	public Summary getSummary() {
+		Summary summary = new Summary();
+		var list = registerService.finAll();
+		var listDto = list.stream().map(x -> new RegisterDTO(x)).toList();
+		summary.setRegisters(listDto);
+		summary.setNumberOfRecords(list.size());
+		summary.setInputQuantity(summary.count(list, EntranceAndExit.ENTRANCE));
+		summary.setOutputQuantity(summary.count(list, EntranceAndExit.EXIT));
+		return summary;
 	}
 }

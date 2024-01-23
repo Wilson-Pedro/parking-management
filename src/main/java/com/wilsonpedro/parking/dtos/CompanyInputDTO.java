@@ -1,8 +1,11 @@
 package com.wilsonpedro.parking.dtos;
 
+import java.io.Serializable;
+
 import com.wilsonpedro.parking.models.Company;
 
-public class CompanyInputDTO {
+public class CompanyInputDTO implements Serializable{
+	private static final long serialVersionUID = 1L;
 	
 	private String name;
 	

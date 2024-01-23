@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.wilsonpedro.parking.dtos.Summary;
 import com.wilsonpedro.parking.dtos.VehicleDTO;
 import com.wilsonpedro.parking.models.Vehicle;
 import com.wilsonpedro.parking.services.VehicleService;
@@ -63,6 +64,12 @@ public class VehicleController {
 	public ResponseEntity notPpark(@PathVariable("id") Long vehicleId) {
 		vehicleService.notParkVehicle(vehicleId);
 		return ResponseEntity.noContent().build();
+	}
+	
+	@GetMapping("/summary")
+	public ResponseEntity summary() {
+		Summary summary = vehicleService.getSummary();
+		return ResponseEntity.ok(summary);
 	}
 	
 	@DeleteMapping("/{id}")

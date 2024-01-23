@@ -1,5 +1,6 @@
 package com.wilsonpedro.parking.models;
 
+import java.io.Serializable;
 import java.util.Objects;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -15,7 +16,8 @@ import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "TB_ADDRESS")
-public class Address {
+public class Address implements Serializable{
+	private static final long serialVersionUID = 1L;
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)

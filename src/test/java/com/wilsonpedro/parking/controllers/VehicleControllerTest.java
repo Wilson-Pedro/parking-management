@@ -70,7 +70,6 @@ class VehicleControllerTest {
 		
 		companyService.save(company);
 		
-		//Long companyId = companyService.findAll().get(0).getId();
 		VehicleDTO vehicleDTO = new VehicleDTO("Chevrolet", "Onix", "Red", "GTT-7227", "Car", "Parked", company.getId());
 		
 		String jsonRequest = objectMapper.writeValueAsString(vehicleDTO);
@@ -181,10 +180,23 @@ class VehicleControllerTest {
 	
 	@Test
 	@Order(7)
+	void mustgetSummarySuccessfully() throws Exception {
+		
+		Long id = vehicleService.findAll().get(0).getId();
+		vehicleService.notParkVehicle(id);
+		
+		mockMvc.perform(get("/vehicles/summary"))
+			.andExpect(status().isOk())
+			.andExpect(jsonPath("$.numberOfRecords", equalTo(2)))
+			.andExpect(jsonPath("$.inputQuantity", equalTo(1)))
+			.andExpect(jsonPath("$.outputQuantity", equalTo(1)));
+	}
+	
+	@Test
+	@Order(9)
 	void mustDeleteTheVehicleSuccessfully() throws Exception {
 		
 		Long id = vehicleService.findAll().get(0).getId();
-//		Vehicle  vehicle = vehicleService.findById(id);
 		
 		assertEquals(1, vehicleRepository.count());
 		

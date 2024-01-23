@@ -1,5 +1,6 @@
 package com.wilsonpedro.parking.models;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 
 import com.wilsonpedro.parking.enums.EntranceAndExit;
@@ -15,7 +16,8 @@ import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "TB_REGISTER")
-public class Register {
+public class Register implements Serializable{
+	private static final long serialVersionUID = 1L;
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)

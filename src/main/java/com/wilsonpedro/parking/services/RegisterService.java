@@ -1,6 +1,7 @@
 package com.wilsonpedro.parking.services;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -20,6 +21,10 @@ public class RegisterService {
 	public Register save(Vehicle vehicle) {
 		Register register = prepareRegistry(vehicle);
 		return registerRepository.save(register);
+	}
+	
+	public List<Register> finAll() {
+		return registerRepository.findAll();
 	}
 	
 	public Register prepareRegistry(Vehicle vehicle) {
