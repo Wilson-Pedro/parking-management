@@ -1,6 +1,7 @@
 package com.wilsonpedro.parking.services;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +15,8 @@ import com.wilsonpedro.parking.repositories.RegisterRepository;
 
 @Service
 public class RegisterService {
+	
+	DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
 	@Autowired
 	private RegisterRepository registerRepository;
@@ -32,7 +35,7 @@ public class RegisterService {
 		register.setVehicle(vehicle);
 		var EntranceAndExit = EntranceOrExit(vehicle.getStatus());
 		register.setEntranceAndExit(EntranceAndExit);
-		register.setLocalDateTime(LocalDateTime.now());
+		register.setLocalDateTime(LocalDateTime.now().format(formatter));
 		
 		return register;
 	}

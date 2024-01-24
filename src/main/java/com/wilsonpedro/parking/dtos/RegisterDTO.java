@@ -1,7 +1,6 @@
 package com.wilsonpedro.parking.dtos;
 
 import java.io.Serializable;
-import java.time.LocalDateTime;
 
 import com.wilsonpedro.parking.models.Register;
 
@@ -12,7 +11,7 @@ public class RegisterDTO implements Serializable{
 	
 	private String entranceAndExit;
 	
-	private LocalDateTime localDateTime;
+	private String localDateTime;
 	
 	public RegisterDTO() {
 	}
@@ -39,11 +38,11 @@ public class RegisterDTO implements Serializable{
 		this.entranceAndExit = entranceAndExit;
 	}
 
-	public LocalDateTime getLocalDateTime() {
+	public String getLocalDateTime() {
 		return localDateTime;
 	}
 
-	public void setLocalDateTime(LocalDateTime localDateTime) {
+	public void setLocalDateTime(String localDateTime) {
 		this.localDateTime = localDateTime;
 	}
 }

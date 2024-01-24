@@ -1,7 +1,6 @@
 package com.wilsonpedro.parking.models;
 
 import java.io.Serializable;
-import java.time.LocalDateTime;
 
 import com.wilsonpedro.parking.enums.EntranceAndExit;
 
@@ -29,7 +28,7 @@ public class Register implements Serializable{
 	
 	private EntranceAndExit entranceAndExit;
 	
-	private LocalDateTime localDateTime;
+	private String localDateTime;
 
 	public Register() {
 	}
@@ -50,11 +49,11 @@ public class Register implements Serializable{
 		this.entranceAndExit = entranceAndExit;
 	}
 
-	public LocalDateTime getLocalDateTime() {
+	public String getLocalDateTime() {
 		return localDateTime;
 	}
 
-	public void setLocalDateTime(LocalDateTime localDateTime) {
+	public void setLocalDateTime(String localDateTime) {
 		this.localDateTime = localDateTime;
 	}
 
