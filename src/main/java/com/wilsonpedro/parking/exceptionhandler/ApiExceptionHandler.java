@@ -15,6 +15,8 @@ import com.wilsonpedro.parking.exceptions.ExistingPhoneException;
 import com.wilsonpedro.parking.exceptions.ExistingPlateException;
 import com.wilsonpedro.parking.exceptions.LimitOfSpacesException;
 import com.wilsonpedro.parking.exceptions.NotFoundException;
+import com.wilsonpedro.parking.exceptions.NotParkedException;
+import com.wilsonpedro.parking.exceptions.ParkedException;
 
 @ControllerAdvice
 public class ApiExceptionHandler extends ResponseEntityExceptionHandler{
@@ -104,6 +106,32 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler{
 		
 		Problam problam = new Problam();
 		problam.setTitle("Existing CEP!");
+		problam.setCode(status.value());
+		problam.setDateTime(OffsetDateTime.now());
+		
+		return ResponseEntity.status(status).body(problam);
+	}
+	
+	@ExceptionHandler(ParkedException.class)
+	public ResponseEntity<Problam> parked() {
+		
+		HttpStatus status = HttpStatus.BAD_REQUEST;
+		
+		Problam problam = new Problam();
+		problam.setTitle("The vehicle is already parked!");
+		problam.setCode(status.value());
+		problam.setDateTime(OffsetDateTime.now());
+		
+		return ResponseEntity.status(status).body(problam);
+	}
+	
+	@ExceptionHandler(NotParkedException.class)
+	public ResponseEntity<Problam> notParked() {
+		
+		HttpStatus status = HttpStatus.BAD_REQUEST;
+		
+		Problam problam = new Problam();
+		problam.setTitle("The vehicle is already not parked!");
 		problam.setCode(status.value());
 		problam.setDateTime(OffsetDateTime.now());
 		

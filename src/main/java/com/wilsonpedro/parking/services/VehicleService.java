@@ -11,9 +11,11 @@ import com.wilsonpedro.parking.dtos.Summary;
 import com.wilsonpedro.parking.dtos.VehicleDTO;
 import com.wilsonpedro.parking.enums.EntranceAndExit;
 import com.wilsonpedro.parking.enums.TypeVehicle;
+import com.wilsonpedro.parking.enums.VehicleStatus;
 import com.wilsonpedro.parking.exceptions.ExistingPlateException;
 import com.wilsonpedro.parking.exceptions.LimitOfSpacesException;
 import com.wilsonpedro.parking.exceptions.NotFoundException;
+import com.wilsonpedro.parking.exceptions.ParkedException;
 import com.wilsonpedro.parking.models.Company;
 import com.wilsonpedro.parking.models.Vehicle;
 import com.wilsonpedro.parking.repositories.CompanyRepository;
@@ -84,6 +86,8 @@ public class VehicleService {
 	public void parkVehicle(Long vehicleId) {
 		Vehicle vehicle = findById(vehicleId);
 		
+		validateVehicleStatus(vehicle.getStatus(), VehicleStatus.PARKED);
+		
 		vehicle.park();
 		
 		registerService.save(vehicle);
@@ -93,6 +97,8 @@ public class VehicleService {
 	@Transactional
 	public void notParkVehicle(Long vehicleId) {
 		Vehicle vehicle = findById(vehicleId);
+		
+		validateVehicleStatus(vehicle.getStatus(), VehicleStatus.NOT_PARKED);
 		
 		vehicle.notPark();
 		
@@ -112,23 +118,6 @@ public class VehicleService {
 		Vehicle vehicle = findById(id);
 		Company company = companyService.findById(vehicle.getCompany().getId());
 		companyService.removeVehicleInVacantSpace(company, vehicle);
-	}
-	
-	private void validatePlate(String plate) {
-		if(vehicleRepository.existsByPlate(plate)) {
-			throw new ExistingPlateException(plate);
-		}
-	}
-	
-	private void validateSpacesForParking(Long companyId, TypeVehicle typeVehicle) {
-		Company company = companyService.findById(companyId);
-		if(typeVehicle.equals(TypeVehicle.CAR)) {
-			if(company.getSpacesForCars() == 0) 
-				throw new LimitOfSpacesException();
-		} else if (typeVehicle.equals(TypeVehicle.MOTORBIKE)) {
-			if(company.getSpacesForMotorbikes() == 0) 
-				throw new LimitOfSpacesException();
-		}
 	}
 
 	public Summary getSummary() {
@@ -162,5 +151,27 @@ public class VehicleService {
 		summary.setOutputQuantity(summary.count(list, EntranceAndExit.EXIT));
 		
 		return summary;
+	}
+	
+	private void validatePlate(String plate) {
+		if(vehicleRepository.existsByPlate(plate)) {
+			throw new ExistingPlateException(plate);
+		}
+	}
+	
+	private void validateSpacesForParking(Long companyId, TypeVehicle typeVehicle) {
+		Company company = companyService.findById(companyId);
+		if(typeVehicle.equals(TypeVehicle.CAR)) {
+			if(company.getSpacesForCars() == 0) 
+				throw new LimitOfSpacesException();
+		} else if (typeVehicle.equals(TypeVehicle.MOTORBIKE)) {
+			if(company.getSpacesForMotorbikes() == 0) 
+				throw new LimitOfSpacesException();
+		}
+	}
+	
+	private void validateVehicleStatus(VehicleStatus statusNow, VehicleStatus status) {
+		if(statusNow.equals(status))
+			throw new ParkedException();
 	}
 }

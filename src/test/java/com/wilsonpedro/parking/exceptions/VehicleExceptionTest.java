@@ -46,6 +46,40 @@ class VehicleExceptionTest {
 	}
 	
 	@Test
+	void ParkedExceptionWhenTryingToParkTheVehicle() {
+		
+		Company company = new Company(1L, "AA-Tecnology", "14310444000166", null, 
+				"(95)1122-9123", 30, 20);
+		
+		companyRepository.save(company);
+		
+		vehicleRepository.save(new Vehicle
+				(1L, "Chevrolet", "Onix", "Red", "DEF-2222", TypeVehicle.CAR, VehicleStatus.PARKED));
+		
+		Long id = vehicleService.findAll().get(0).getId();
+		
+		assertThrows(ParkedException.class, () -> vehicleService.parkVehicle(id));
+		
+	}
+	
+	@Test
+	void NotParkedExceptionWhenTryingToParkTheVehicle() {
+		
+		Company company = new Company(1L, "AA-Tecnology", "22220444000166", null, 
+				"(98)1122-1111", 30, 20);
+		
+		companyRepository.save(company);
+		
+		Vehicle vehicle = new Vehicle
+				(2L, "Chevrolet", "Onix", "Red", "DMC-3145", TypeVehicle.CAR, VehicleStatus.NOT_PARKED);
+		
+		vehicleRepository.save(vehicle);
+		
+		assertThrows(ParkedException.class, () -> vehicleService.notParkVehicle(vehicle.getId()));
+		
+	}
+	
+	@Test
 	void LimitOfSpacesExceptionWhenTryingToSaveACar() {
 		
 		Company company = new Company(1L, "WS-Tecnology", "60221122000333", null, 
