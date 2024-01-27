@@ -60,7 +60,7 @@ class CompanyExceptionTest {
 	@Test
 	void EntityNotFoundExceptionWhenTryingToUpdateCompany() {
 		
-		CompanyInputDTO company = new CompanyInputDTO("WS-Tecnology", "14326422000166", 
+		CompanyInputDTO company = new CompanyInputDTO("WY-Tecnology", "12226422000166", 
 				"(95)2256-9123", 30, 20);
 		
 		assertThrows(NotFoundException.class, () -> companyService.update(company, 70L));

@@ -1,6 +1,7 @@
 package com.wilsonpedro.parking.services;
 
 import java.util.List;
+import java.util.Objects;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -45,6 +46,7 @@ public class CompanyService {
 	
 	@Transactional
 	public Company update(CompanyInputDTO companyInput, Long id) {
+		validadeUpdate(companyInput, id);
 		return companyRepository.findById(id)
 				.map(companyUpdated -> {
 					companyUpdated.setId(id);
@@ -74,7 +76,8 @@ public class CompanyService {
 			company.decrementOneInTheMotorbikesSpace();
 		}
 		
-		update(new CompanyInputDTO(company), companyId);
+		//update(new CompanyInputDTO(company), companyId);
+		companyRepository.save(company);
 	}
 	
 	public void removeVehicleInVacantSpace(Company company, Vehicle vehicle) {
@@ -107,5 +110,14 @@ public class CompanyService {
 	private void validateName(String name) {
 		if(companyRepository.existsByName(name))
 			throw new ExistingCompanyNameException();
+	}
+	
+	private void validadeUpdate(CompanyInputDTO companyInput, Long id) {
+		
+		if(companyRepository.existsByName(companyInput.getName())) {
+			Company company = companyRepository.findByName(companyInput.getName()).get();
+			if(!Objects.equals(company.getId(), id))
+				throw new ExistingCompanyNameException();
+		}
 	}
 }

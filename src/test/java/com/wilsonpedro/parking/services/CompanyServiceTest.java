@@ -49,7 +49,7 @@ class CompanyServiceTest {
 	
 	@BeforeEach
 	void setup() {
-		vehicle = new Vehicle(1L, "Chevrolet", "Onix", "Red", "DGL-1488", TypeVehicle.CAR, VehicleStatus.UNDEFINED);
+		vehicle = new Vehicle(1L, "Chevrolet", "Onix", "Red", "DDD-4444", TypeVehicle.CAR, VehicleStatus.UNDEFINED);
 	}
 
 	@Test
@@ -67,7 +67,7 @@ class CompanyServiceTest {
 		
 		Company company = new Company();
 		company.setId(null);
-		company.setName("WS-Tecnology");
+		company.setName("WX-Tecnology");
 		company.setCnpj("14326422000166");
 		company.setAddress(address);
 		company.setPhone("(95)3456-7413");
@@ -102,7 +102,7 @@ class CompanyServiceTest {
 		
 		assertNotNull(company);
 		assertEquals(id, company.getId());
-		assertEquals("WS-Tecnology", company.getName());
+		assertEquals("WX-Tecnology", company.getName());
 		assertEquals("14326422000166", company.getCnpj());
 		assertEquals("(95)3456-7413", company.getPhone());
 		assertEquals(30, company.getSpacesForMotorbikes());

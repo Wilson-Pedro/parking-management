@@ -28,8 +28,6 @@ public class CompanyInputDTO implements Serializable{
 		this.spacesForCars = spacesForCars;
 	}
 
-
-
 	public CompanyInputDTO(Company company) {
 		name = company.getName();
 		cnpj = company.getCnpj();
