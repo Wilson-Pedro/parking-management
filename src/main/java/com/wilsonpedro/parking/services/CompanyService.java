@@ -46,7 +46,7 @@ public class CompanyService {
 	
 	@Transactional
 	public Company update(CompanyInputDTO companyInput, Long id) {
-		validadeUpdate(companyInput, id);
+		validateUpdate(companyInput, id);
 		return companyRepository.findById(id)
 				.map(companyUpdated -> {
 					companyUpdated.setId(id);
@@ -88,7 +88,7 @@ public class CompanyService {
 			company.increaseOneInTheMotorbikesSpace();
 		}
 		
-		update(new CompanyInputDTO(company), company.getId());
+		companyRepository.save(company);
 	}
 	
 	private void validateCompanay(Company company) {
@@ -112,12 +112,26 @@ public class CompanyService {
 			throw new ExistingCompanyNameException();
 	}
 	
-	private void validadeUpdate(CompanyInputDTO companyInput, Long id) {
+	private void validateUpdate(CompanyInputDTO companyInput, Long id) {
 		
 		if(companyRepository.existsByName(companyInput.getName())) {
 			Company company = companyRepository.findByName(companyInput.getName()).get();
 			if(!Objects.equals(company.getId(), id))
 				throw new ExistingCompanyNameException();
+			
+		} 
+		
+		else if (companyRepository.existsByCnpj(companyInput.getCnpj())) {
+			Company company = companyRepository.findByCnpj(companyInput.getCnpj()).get();
+			if(!Objects.equals(company.getId(), id))
+				throw new ExistingCnpjException(company.getCnpj());
+			
+		} 
+		
+		else if (companyRepository.existsByPhone(companyInput.getPhone())) {
+			Company company = companyRepository.findByPhone(companyInput.getPhone()).get();
+			if(!Objects.equals(company.getId(), id))
+				throw new ExistingPhoneException();
 		}
 	}
 }
