@@ -146,6 +146,14 @@ public class Vehicle implements Serializable{
 	public void undefined() {
 		setStatus(VehicleStatus.UNDEFINED);
 	}
+	
+	public boolean isCar() {
+		return type.equals(TypeVehicle.CAR);
+	}
+	
+	public boolean isMotorbike() {
+		return type.equals(TypeVehicle.MOTORBIKE);
+	}
 
 	@Override
 	public int hashCode() {

@@ -1,6 +1,7 @@
 package com.wilsonpedro.parking.services;
 
 import java.util.List;
+import java.util.Objects;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -44,6 +45,7 @@ public class AddressService {
 	}
 
 	public Address update(AddressDTO addressDTO, Long id) {
+		validateUpdate(addressDTO, id);
 		return addressRepository.findById(id)
 				.map(addressUpdated -> {
 					addressUpdated.setId(id);
@@ -63,5 +65,15 @@ public class AddressService {
 	private void validateCep(String cep) {
 		if(addressRepository.existsByCep(cep))
 			throw new ExistingCepException(cep);
+	}
+	
+	private void validateUpdate(AddressDTO addressDTO, Long id) {
+		
+		if(addressRepository.existsByCep(addressDTO.getCep())) {
+			var address = addressRepository.findByCep(addressDTO.getCep()).get();
+			if(!Objects.equals(address.getId(), id))
+				throw new ExistingCepException(addressDTO.getCep());
+		}
+		
 	}
 }

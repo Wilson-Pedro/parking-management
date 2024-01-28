@@ -36,7 +36,7 @@ public class AddressDTO implements Serializable{
 		street = address.getStreet();
 		neighborhood = address.getNeighborhood();
 		city = address.getCity();
-		companyId = address.getCompany().getId();
+		companyId = address.getCompany() == null ? null : address.getCompany().getId();
 	}
 
 	public Long getId() {

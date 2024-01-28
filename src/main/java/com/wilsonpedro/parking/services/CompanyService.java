@@ -70,9 +70,9 @@ public class CompanyService {
 		
 		company.getVehicles().add(vehicle);
 		
-		if(vehicle.getType().equals(TypeVehicle.CAR)) {
+		if(vehicle.isCar()) {
 			company.decrementOneInTheCarSpace();
-		} else if(vehicle.getType().equals(TypeVehicle.MOTORBIKE)){
+		} else if(vehicle.isMotorbike()){
 			company.decrementOneInTheMotorbikesSpace();
 		}
 		

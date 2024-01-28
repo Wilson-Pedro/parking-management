@@ -2,7 +2,10 @@ package com.wilsonpedro.parking.exceptions;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+import org.junit.jupiter.api.MethodOrderer;
+import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestMethodOrder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
@@ -12,6 +15,7 @@ import com.wilsonpedro.parking.repositories.CompanyRepository;
 import com.wilsonpedro.parking.services.AddressService;
 
 @SpringBootTest
+@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 class AddressExceptionTest {
 	
 	@Autowired
@@ -21,6 +25,7 @@ class AddressExceptionTest {
 	CompanyRepository companyRepository;
 	
 	@Test
+	@Order(1)
 	void ExistingCepExceptionWhenTryingToSaveAddress() {
 		
 		companyRepository.deleteAll();
@@ -35,6 +40,25 @@ class AddressExceptionTest {
 		AddressDTO addressDTO = new AddressDTO("77062-082", "Rua das Melâncias", "Flores", "Minas-Gerais", 1L);
 		
 		assertThrows(ExistingCepException.class, () -> addressService.save(addressDTO));
+	}
+	
+	@Test
+	@Order(2)
+	void ExistingCepExceptionWhenTryingToUpdateAddress() {
+		
+		companyRepository.save(new Company
+				(2L, "AS-Movies", "2778343000191", null, "(98)10012-9493", 30, 20));
+		
+		Long companyId = companyRepository.findAll().get(1).getId();
+		
+		addressService.save(new AddressDTO("22062-081", "Rua das Ameixas", "Flores", "Minas-Gerais", companyId));
+		
+		Long addressId = addressService.findAll().get(0).getId();
+		var address = addressService.findById(addressId);
+		address.setCep("22062-081");
+		var dto = new AddressDTO(address);
+		
+		assertThrows(ExistingCepException.class, () -> addressService.update(dto, addressId));
 	}
 
 	@Test
