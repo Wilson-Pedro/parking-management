@@ -3,6 +3,7 @@ package com.wilsonpedro.parking.controllers;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -18,15 +19,24 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.test.web.servlet.MockMvc;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.wilsonpedro.parking.dtos.RegistroDTO;
 import com.wilsonpedro.parking.dtos.VehicleDTO;
+import com.wilsonpedro.parking.dtos.records.AuthenticationDTO;
+import com.wilsonpedro.parking.enums.UserRole;
 import com.wilsonpedro.parking.enums.VehicleStatus;
+import com.wilsonpedro.parking.infra.security.TokenService;
 import com.wilsonpedro.parking.models.Company;
+import com.wilsonpedro.parking.models.User;
 import com.wilsonpedro.parking.models.Vehicle;
 import com.wilsonpedro.parking.repositories.AddressRepository;
 import com.wilsonpedro.parking.repositories.CompanyRepository;
+import com.wilsonpedro.parking.repositories.UserRepository;
 import com.wilsonpedro.parking.repositories.VehicleRepository;
 import com.wilsonpedro.parking.services.CompanyService;
 import com.wilsonpedro.parking.services.VehicleService;
@@ -37,6 +47,8 @@ import jakarta.transaction.Transactional;
 @AutoConfigureMockMvc
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 class VehicleControllerTest {
+	
+	private static String TOKEN = "";
 	
 	@Autowired
 	VehicleService vehicleService;
@@ -58,9 +70,52 @@ class VehicleControllerTest {
 	
 	@Autowired
 	MockMvc mockMvc;
-
+	
+	@Autowired
+	AuthenticationManager authenticationManager;
+	
+	@Autowired
+	UserRepository userRepository;
+	
+	@Autowired
+	TokenService tokenService;
+	
 	@Test
 	@Order(1)
+	void mustRegisterTheUserSuccessfully() {
+		userRepository.deleteAll();
+		
+		RegistroDTO registroDTO = new RegistroDTO("neto", "12345", UserRole.ADMIN);
+		
+		String encryptedPassword = new BCryptPasswordEncoder().encode(registroDTO.getPassword());
+		
+		assertNotNull(encryptedPassword);
+		assertNotEquals(encryptedPassword, registroDTO.getPassword());
+		
+		User user = new User(registroDTO.getLogin(), encryptedPassword, registroDTO.getRole());
+		
+		assertEquals(0, userRepository.count());
+		
+		userRepository.save(user);
+		
+		assertEquals(1, userRepository.count());
+		assertEquals(UserRole.ADMIN, user.getRole());
+	}
+
+	@Test
+	@Order(2)
+	void mustRealizeLoginSuccessfully() {
+		AuthenticationDTO dto = new AuthenticationDTO("neto", "12345");
+		var usernamePassword = new UsernamePasswordAuthenticationToken(dto.login(), dto.password());
+		var auth = this.authenticationManager.authenticate(usernamePassword);
+		var token = this.tokenService.generateToken((User) auth.getPrincipal());
+		
+		assertNotNull(token);
+		TOKEN = token;
+	}
+
+	@Test
+	@Order(3)
 	void mustSaveTheVehcileSuccessfully() throws Exception {
 		
 		companyRepository.deleteAll();
@@ -77,6 +132,7 @@ class VehicleControllerTest {
 		assertEquals(0, vehicleRepository.count());
 		
 		mockMvc.perform(post("/vehicles/")
+				.header("Authorization", "Bearer " + TOKEN)
 				.contentType(MediaType.APPLICATION_JSON)
 				.content(jsonRequest))
 				.andExpect(status().isCreated())
@@ -93,18 +149,20 @@ class VehicleControllerTest {
 	}
 	
 	@Test
-	@Order(2) 
+	@Order(4) 
 	void mustFetchAListOfVehiclesSuccessfully() throws Exception {
 		
-		mockMvc.perform(get("/vehicles"))
+		mockMvc.perform(get("/vehicles")
+				.header("Authorization", "Bearer " + TOKEN))
 				.andExpect(status().isOk());
 	}
 	
 	@Test
-	@Order(3)
+	@Order(5)
 	void mustFindForTheVehicleFromTheIdSuccessfully() throws Exception {
 		
-		mockMvc.perform(get("/vehicles/{id}", 1L))
+		mockMvc.perform(get("/vehicles/{id}", 1L)
+			.header("Authorization", "Bearer " + TOKEN))
 			.andExpect(status().isOk())
 			.andExpect(jsonPath("$.id", equalTo(1)))
 			.andExpect(jsonPath("$.brand", equalTo("Chevrolet")))
@@ -115,7 +173,7 @@ class VehicleControllerTest {
 	}
 	
 	@Test
-	@Order(4)
+	@Order(6)
 	void mustUpdateTheVehicleSuccessfully() throws Exception {
 		
 		Long companyId = companyService.findAll().get(0).getId();
@@ -129,6 +187,7 @@ class VehicleControllerTest {
 		String jsonRequest = objectMapper.writeValueAsString(vehicleUpdated);
 		
 		mockMvc.perform(put("/vehicles/{id}", 1L)
+				.header("Authorization", "Bearer " + TOKEN)
 				.contentType(MediaType.APPLICATION_JSON)
 				.content(jsonRequest))
 				.andExpect(status().isOk())
@@ -141,7 +200,7 @@ class VehicleControllerTest {
 	}
 	
 	@Test
-	@Order(5)
+	@Order(7)
 	void mustChangeStatusToParkSuccessfully() throws Exception {
 		
 		Long id = vehicleService.findAll().get(0).getId();
@@ -151,8 +210,9 @@ class VehicleControllerTest {
 		
 		assertNotEquals(VehicleStatus.PARKED, vehicle.getStatus());
 		
-		mockMvc.perform(put("/vehicles/{id}/park", id))
-					.andExpect(status().isNoContent());
+		mockMvc.perform(put("/vehicles/{id}/park", id)
+				.header("Authorization", "Bearer " + TOKEN))
+				.andExpect(status().isNoContent());
 		
 		Vehicle vehicleFinded = vehicleRepository.findById(id).get();
 		
@@ -161,7 +221,7 @@ class VehicleControllerTest {
 	
 	@Transactional
 	@Test
-	@Order(6)
+	@Order(8)
 	void mustChangeStatusToNotParkSuccessfully() throws Exception {
 		
 		Long id = vehicleService.findAll().get(0).getId();
@@ -170,8 +230,9 @@ class VehicleControllerTest {
 		
 		assertNotEquals(VehicleStatus.NOT_PARKED, vehicle.getStatus());
 		
-		mockMvc.perform(put("/vehicles/{id}/notPark", id))
-					.andExpect(status().isNoContent());
+		mockMvc.perform(put("/vehicles/{id}/notPark", id)
+				.header("Authorization", "Bearer " + TOKEN))
+				.andExpect(status().isNoContent());
 		
 		Vehicle vehicleFinded = vehicleRepository.findById(id).get();
 		
@@ -179,13 +240,14 @@ class VehicleControllerTest {
 	}
 	
 	@Test
-	@Order(7)
+	@Order(9)
 	void mustGetSummarySuccessfully() throws Exception {
 		
 		Long id = vehicleService.findAll().get(0).getId();
 		vehicleService.notParkVehicle(id);
 		
-		mockMvc.perform(get("/vehicles/summary"))
+		mockMvc.perform(get("/vehicles/summary")
+			.header("Authorization", "Bearer " + TOKEN))
 			.andExpect(status().isOk())
 			.andExpect(jsonPath("$.numberOfRecords", equalTo(2)))
 			.andExpect(jsonPath("$.inputQuantity", equalTo(1)))
@@ -193,7 +255,7 @@ class VehicleControllerTest {
 	}
 	
 	@Test
-	@Order(8)
+	@Order(10)
 	void mustGetSummaryByVehicleIdSuccessfully() throws Exception {
 		
 		Long companyId = companyRepository.findAll().get(0).getId();
@@ -205,7 +267,8 @@ class VehicleControllerTest {
 		Long id = vehicleService.findAll().get(1).getId();
 		vehicleService.parkVehicle(id);
 		
-		mockMvc.perform(get("/vehicles/{id}/summary", 2L))
+		mockMvc.perform(get("/vehicles/{id}/summary", 2L)
+			.header("Authorization", "Bearer " + TOKEN))
 			.andExpect(status().isOk())
 			.andExpect(jsonPath("$.numberOfRecords", equalTo(1)))
 			.andExpect(jsonPath("$.inputQuantity", equalTo(1)))
@@ -213,14 +276,15 @@ class VehicleControllerTest {
 	}
 	
 	@Test
-	@Order(9)
+	@Order(11)
 	void mustDeleteTheVehicleSuccessfully() throws Exception {
 		
 		Long id = vehicleService.findAll().get(0).getId();
 		
 		assertEquals(2, vehicleRepository.count());
 		
-		mockMvc.perform(delete("/vehicles/{id}", id))
+		mockMvc.perform(delete("/vehicles/{id}", id)
+				.header("Authorization", "Bearer " + TOKEN))
 				.andExpect(status().isNoContent());
 		
 		assertEquals(1, vehicleRepository.count());
