@@ -13,9 +13,8 @@ import org.junit.jupiter.api.TestMethodOrder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import com.wilsonpedro.parking.dtos.AddressDTO;
-import com.wilsonpedro.parking.dtos.CompanyInputDTO;
 import com.wilsonpedro.parking.models.Address;
+import com.wilsonpedro.parking.models.Company;
 import com.wilsonpedro.parking.repositories.AddressRepository;
 
 @SpringBootTest
@@ -37,24 +36,23 @@ class AddressServiceTest {
 		
 		addressRepository.deleteAll();
 		
-		CompanyInputDTO companyInputDto = new CompanyInputDTO("WW-Tecnology", "85674214000104", 
-				"(87)3710-6646", 30, 20);
+		Company company = new Company(null, "GG-Tecnology", "18886422000166", null, 
+		"(92)2211-9003", 30, 20);
 		
-		companyService.save(companyInputDto);
+		companyService.save(company);
 		
 		Long companyId = companyService.findAll().get(0).getId();
 		
-		AddressDTO addressDTO = new AddressDTO();
-		addressDTO.setId(null);
-		addressDTO.setCep("80120-111");
-		addressDTO.setStreet("Rua das Ameixas");
-		addressDTO.setNeighborhood("Flores");
-		addressDTO.setCity("Minas-Gerais");
-		addressDTO.setCompanyId(companyId);
+		Address address = new Address();
+		address.setId(null);
+		address.setCep("80120-111");
+		address.setStreet("Rua das Ameixas");
+		address.setNeighborhood("Flores");
+		address.setCity("Minas-Gerais");
 		
 		assertEquals(0, this.addressRepository.count());
 		
-		Address addressSaved = this.addressService.save(addressDTO);
+		Address addressSaved = this.addressService.save(address, companyId);
 		
 		assertNotNull(addressSaved.getId());
 		assertEquals(1, this.addressRepository.count());
@@ -97,9 +95,9 @@ class AddressServiceTest {
 		assertNotEquals("Rua das Maçãs", address.getStreet());
 		address.setStreet("Rua das Maçãs");
 		
-		AddressDTO addressDTO = new AddressDTO(address);
+//		AddressDTO addressDTO = new AddressDTO(address);
 		
-		Address addressUpdated = addressService.update(addressDTO, id);
+		Address addressUpdated = addressService.update(address, id);
 		
 		assertEquals("Rua das Maçãs", addressUpdated.getStreet());
 	}

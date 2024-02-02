@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import com.wilsonpedro.parking.dtos.AddressDTO;
+import com.wilsonpedro.parking.models.Address;
 import com.wilsonpedro.parking.models.Company;
 import com.wilsonpedro.parking.repositories.CompanyRepository;
 import com.wilsonpedro.parking.services.AddressService;
@@ -35,11 +36,11 @@ class AddressExceptionTest {
 		
 		Long companyId = companyRepository.findAll().get(0).getId();
 		
-		addressService.save(new AddressDTO("77062-082", "Rua das Ameixas", "Flores", "Minas-Gerais", companyId));
+		addressService.save(new Address(1L, "77062-082", "Rua das Melâncias", "Flores", "Minas-Gerais"), companyId);
 	
-		AddressDTO addressDTO = new AddressDTO("77062-082", "Rua das Melâncias", "Flores", "Minas-Gerais", 1L);
+		Address address = new Address(2L, "77062-082", "Rua das Melâncias", "Flores", "Minas-Gerais");
 		
-		assertThrows(ExistingCepException.class, () -> addressService.save(addressDTO));
+		assertThrows(ExistingCepException.class, () -> addressService.save(address, 1L));
 	}
 	
 	@Test
@@ -51,14 +52,13 @@ class AddressExceptionTest {
 		
 		Long companyId = companyRepository.findAll().get(1).getId();
 		
-		addressService.save(new AddressDTO("22062-081", "Rua das Ameixas", "Flores", "Minas-Gerais", companyId));
+		addressService.save(new Address(3L, "22062-081", "Rua das Ameixas", "Flores", "Minas-Gerais"), companyId);
 		
 		Long addressId = addressService.findAll().get(0).getId();
 		var address = addressService.findById(addressId);
 		address.setCep("22062-081");
-		var dto = new AddressDTO(address);
 		
-		assertThrows(ExistingCepException.class, () -> addressService.update(dto, addressId));
+		assertThrows(ExistingCepException.class, () -> addressService.update(address, addressId));
 	}
 
 	@Test
@@ -70,9 +70,9 @@ class AddressExceptionTest {
 	@Test
 	void EntityNotFoundExceptionWhenTryingToUpdateAddress() {
 		
-		AddressDTO addressDTO = new AddressDTO("52220-251", "Rua das Ameixas", "Flores", "Minas-Gerais", 1L);
+		Address address = new Address(4L, "52220-251", "Rua das Ameixas", "Flores", "Minas-Gerais");
 		
-		assertThrows(NotFoundException.class, () -> addressService.update(addressDTO, 70L));
+		assertThrows(NotFoundException.class, () -> addressService.update(address, 70L));
 	}
 
 	@Test

@@ -27,7 +27,7 @@ public class AddressController {
 	
 	@PostMapping("/")
 	public ResponseEntity save(@RequestBody AddressDTO addressDTO) {
-		Address addressSaved = addressService.save(addressDTO);
+		Address addressSaved = addressService.save(new Address(addressDTO), addressDTO.getCompanyId());
 		AddressDTO dtoSaved = new AddressDTO(addressSaved);
 		return ResponseEntity.status(HttpStatus.CREATED).body(dtoSaved);
 	}
@@ -47,7 +47,7 @@ public class AddressController {
 	
 	@PutMapping("/{id}")
 	public ResponseEntity update(@RequestBody AddressDTO addressDTO, @PathVariable Long id) {
-		Address addressUpdated = addressService.update(addressDTO, id);
+		Address addressUpdated = addressService.update(new Address(addressDTO), id);
 		AddressDTO dtoUpdated = new AddressDTO(addressUpdated);
 		return ResponseEntity.ok().body(dtoUpdated);
 	}

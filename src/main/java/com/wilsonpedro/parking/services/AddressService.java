@@ -6,7 +6,6 @@ import java.util.Objects;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.wilsonpedro.parking.dtos.AddressDTO;
 import com.wilsonpedro.parking.exceptions.ExistingCepException;
 import com.wilsonpedro.parking.exceptions.NotFoundException;
 import com.wilsonpedro.parking.models.Address;
@@ -22,15 +21,14 @@ public class AddressService {
 	@Autowired
 	private CompanyService companyService;
 	
-	public Address save(AddressDTO addressDto) {
-		validateCep(addressDto.getCep());
-		Address address = toEntity(addressDto);
+	public Address save(Address address, Long companyId) {
+		validateCep(address.getCep());
+		address = prepareToSave(address, companyId);
 		return addressRepository.save(address);
 	}
 
-	private Address toEntity(AddressDTO addressDto) {
-		Company company = companyService.findById(addressDto.getCompanyId());
-		Address address = new Address(addressDto);
+	private Address prepareToSave(Address address, Long companyId) {
+		Company company = companyService.findById(companyId);
 		address.setCompany(company);
 		return address;
 	}
@@ -44,15 +42,15 @@ public class AddressService {
 				.orElseThrow(() -> new NotFoundException(id));
 	}
 
-	public Address update(AddressDTO addressDTO, Long id) {
-		validateUpdate(addressDTO, id);
+	public Address update(Address address, Long id) {
+		validateUpdate(address, id);
 		return addressRepository.findById(id)
 				.map(addressUpdated -> {
 					addressUpdated.setId(id);
-					addressUpdated.setCep(addressDTO.getCep());
-					addressUpdated.setStreet(addressDTO.getStreet());
-					addressUpdated.setNeighborhood(addressDTO.getNeighborhood());
-					addressUpdated.setCity(addressDTO.getCity());
+					addressUpdated.setCep(address.getCep());
+					addressUpdated.setStreet(address.getStreet());
+					addressUpdated.setNeighborhood(address.getNeighborhood());
+					addressUpdated.setCity(address.getCity());
 					return addressRepository.save(addressUpdated);
 				}).orElseThrow(() -> new NotFoundException(id));
 	}
@@ -67,13 +65,12 @@ public class AddressService {
 			throw new ExistingCepException(cep);
 	}
 	
-	private void validateUpdate(AddressDTO addressDTO, Long id) {
+	private void validateUpdate(Address address, Long id) {
 		
-		if(addressRepository.existsByCep(addressDTO.getCep())) {
-			var address = addressRepository.findByCep(addressDTO.getCep()).get();
-			if(!Objects.equals(address.getId(), id))
-				throw new ExistingCepException(addressDTO.getCep());
+		if(addressRepository.existsByCep(address.getCep())) {
+			var ads = addressRepository.findByCep(address.getCep()).get();
+			if(!Objects.equals(ads.getId(), id))
+				throw new ExistingCepException(address.getCep());
 		}
-		
 	}
 }
