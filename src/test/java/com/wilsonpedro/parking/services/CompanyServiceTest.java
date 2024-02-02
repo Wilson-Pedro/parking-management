@@ -14,7 +14,6 @@ import org.junit.jupiter.api.TestMethodOrder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import com.wilsonpedro.parking.dtos.CompanyInputDTO;
 import com.wilsonpedro.parking.enums.TypeVehicle;
 import com.wilsonpedro.parking.enums.VehicleStatus;
 import com.wilsonpedro.parking.models.Address;
@@ -120,9 +119,7 @@ class CompanyServiceTest {
 		assertNotEquals("(95)2256-3413", company.getPhone());
 		company.setPhone("(95)2256-3413");
 		
-		CompanyInputDTO dto = new CompanyInputDTO(company);
-		
-		Company companyUpdated = this.companyService.update(dto, id);
+		Company companyUpdated = this.companyService.update(company, id);
 		
 		assertEquals("(95)2256-3413", companyUpdated.getPhone());
 		

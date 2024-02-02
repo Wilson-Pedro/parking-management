@@ -29,7 +29,7 @@ public class CompanyController {
 	
 	@PostMapping("/")
 	public ResponseEntity save(@RequestBody CompanyInputDTO companyInputMinDTO) {
-		Company companySaved = companyService.save(companyInputMinDTO);
+		Company companySaved = companyService.save(new Company(companyInputMinDTO));
 		CompanyDTO companyDTO = new CompanyDTO(companySaved);
 		return ResponseEntity.status(HttpStatus.CREATED).body(companyDTO);
 	}
@@ -50,7 +50,7 @@ public class CompanyController {
 	
 	@PutMapping("/{id}")
 	public ResponseEntity update(@RequestBody CompanyInputDTO companyInput, @PathVariable Long id) {
-		Company companyUpdated = companyService.update(companyInput, id);
+		Company companyUpdated = companyService.update(new Company(companyInput), id);
 		CompanyDTO dtoUpdated= new CompanyDTO(companyUpdated);
 		return ResponseEntity.ok().body(dtoUpdated);
 	}

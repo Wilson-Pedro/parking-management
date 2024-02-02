@@ -32,6 +32,7 @@ import com.wilsonpedro.parking.dtos.records.AuthenticationDTO;
 import com.wilsonpedro.parking.enums.UserRole;
 import com.wilsonpedro.parking.infra.security.TokenService;
 import com.wilsonpedro.parking.models.Address;
+import com.wilsonpedro.parking.models.Company;
 import com.wilsonpedro.parking.models.User;
 import com.wilsonpedro.parking.repositories.AddressRepository;
 import com.wilsonpedro.parking.repositories.UserRepository;
@@ -112,7 +113,7 @@ class AddressControllerTest {
 		CompanyInputDTO companyInputDto = new CompanyInputDTO("WS-Tecnology", "14326422000166", 
 				"(95)2256-9123", 30, 20);
 		
-		companyService.save(companyInputDto);
+		companyService.save(new Company(companyInputDto));
 		
 		Long companyId = companyService.findAll().get(0).getId();
 		

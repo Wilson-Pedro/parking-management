@@ -6,7 +6,6 @@ import java.util.Objects;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.wilsonpedro.parking.dtos.CompanyInputDTO;
 import com.wilsonpedro.parking.enums.TypeVehicle;
 import com.wilsonpedro.parking.exceptions.ExistingCnpjException;
 import com.wilsonpedro.parking.exceptions.ExistingCompanyNameException;
@@ -23,17 +22,10 @@ public class CompanyService {
 
 	@Autowired
 	private CompanyRepository companyRepository;
-	
-	@Transactional
+
 	public Company save(Company company) {
 		validateCompanay(company);
 		return companyRepository.save(company);
-	}
-
-	public Company save(CompanyInputDTO companyInputDTO) {
-		validateCompanay(new Company(companyInputDTO));
-		Company company = new Company(companyInputDTO);
-		return save(company);
 	}
 
 	public List<Company> findAll() {
@@ -45,16 +37,16 @@ public class CompanyService {
 	}
 	
 	@Transactional
-	public Company update(CompanyInputDTO companyInput, Long id) {
-		validateUpdate(companyInput, id);
+	public Company update(Company company, Long id) {
+		validateUpdate(company, id);
 		return companyRepository.findById(id)
 				.map(companyUpdated -> {
 					companyUpdated.setId(id);
-					companyUpdated.setName(companyInput.getName());
-					companyUpdated.setCnpj(companyInput.getCnpj());
-					companyUpdated.setPhone(companyInput.getPhone());
-					companyUpdated.setSpacesForMotorbikes(companyInput.getSpacesForMotorbikes());
-					companyUpdated.setSpacesForCars(companyInput.getSpacesForCars());
+					companyUpdated.setName(company.getName());
+					companyUpdated.setCnpj(company.getCnpj());
+					companyUpdated.setPhone(company.getPhone());
+					companyUpdated.setSpacesForMotorbikes(company.getSpacesForMotorbikes());
+					companyUpdated.setSpacesForCars(company.getSpacesForCars());
 					return companyRepository.save(companyUpdated);
 				}).orElseThrow(() -> new NotFoundException(id));
 	}
@@ -76,7 +68,6 @@ public class CompanyService {
 			company.decrementOneInTheMotorbikesSpace();
 		}
 		
-		//update(new CompanyInputDTO(company), companyId);
 		companyRepository.save(company);
 	}
 	
@@ -112,25 +103,25 @@ public class CompanyService {
 			throw new ExistingCompanyNameException();
 	}
 	
-	private void validateUpdate(CompanyInputDTO companyInput, Long id) {
+	private void validateUpdate(Company company, Long id) {
 		
-		if(companyRepository.existsByName(companyInput.getName())) {
-			Company company = companyRepository.findByName(companyInput.getName()).get();
-			if(!Objects.equals(company.getId(), id))
+		if(companyRepository.existsByName(company.getName())) {
+			Company companyFinded = companyRepository.findByName(company.getName()).get();
+			if(!Objects.equals(companyFinded.getId(), id))
 				throw new ExistingCompanyNameException();
 			
 		} 
 		
-		else if (companyRepository.existsByCnpj(companyInput.getCnpj())) {
-			Company company = companyRepository.findByCnpj(companyInput.getCnpj()).get();
-			if(!Objects.equals(company.getId(), id))
-				throw new ExistingCnpjException(company.getCnpj());
+		else if (companyRepository.existsByCnpj(company.getCnpj())) {
+			Company companyFinded = companyRepository.findByCnpj(company.getCnpj()).get();
+			if(!Objects.equals(companyFinded.getId(), id))
+				throw new ExistingCnpjException(companyFinded.getCnpj());
 			
 		} 
 		
-		else if (companyRepository.existsByPhone(companyInput.getPhone())) {
-			Company company = companyRepository.findByPhone(companyInput.getPhone()).get();
-			if(!Objects.equals(company.getId(), id))
+		else if (companyRepository.existsByPhone(company.getPhone())) {
+			Company companyFinded = companyRepository.findByPhone(company.getPhone()).get();
+			if(!Objects.equals(companyFinded.getId(), id))
 				throw new ExistingPhoneException();
 		}
 	}
