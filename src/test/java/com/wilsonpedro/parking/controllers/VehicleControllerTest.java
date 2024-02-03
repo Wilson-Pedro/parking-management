@@ -260,9 +260,9 @@ class VehicleControllerTest {
 		
 		Long companyId = companyRepository.findAll().get(0).getId();
 		
-		var vehicleDTO = new VehicleDTO
+		var dto = new VehicleDTO
 				("Chevrolet", "Unix", "Black", "CDZ-4321", "Motobike", "Parked", companyId);
-		vehicleService.save(vehicleDTO);
+		vehicleService.save(new Vehicle(dto), companyId);
 		
 		Long id = vehicleService.findAll().get(1).getId();
 		vehicleService.parkVehicle(id);

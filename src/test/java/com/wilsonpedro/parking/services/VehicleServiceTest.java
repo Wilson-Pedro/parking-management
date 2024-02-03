@@ -48,19 +48,18 @@ class VehicleServiceTest {
 		
 		Long companyId = companyRepository.findAll().get(0).getId();
 		
-		VehicleDTO vehicleDTO = new VehicleDTO();
-		vehicleDTO.setId(null);
-		vehicleDTO.setBrand("Chevrolet");
-		vehicleDTO.setModel("Onix");
-		vehicleDTO.setColor("Red");
-		vehicleDTO.setPlate("HZN-8845");
-		vehicleDTO.setType("Car");
-		vehicleDTO.setStatus("Undefined");
-		vehicleDTO.setCompanyId(companyId);
+		Vehicle vehicle = new Vehicle();
+		vehicle.setId(null);
+		vehicle.setBrand("Chevrolet");
+		vehicle.setModel("Onix");
+		vehicle.setColor("Red");
+		vehicle.setPlate("HZN-8845");
+		vehicle.setType(TypeVehicle.CAR);
+		vehicle.setStatus(VehicleStatus.UNDEFINED);
 		
 		assertEquals(0, vehicleRepository.count());
 		
-		Vehicle vehicleSaved = vehicleService.save(vehicleDTO);
+		Vehicle vehicleSaved = vehicleService.save(vehicle, companyId);
 		Company companyFinded = companyRepository.findById(companyId).get();
 		
 		assertNotNull(vehicleSaved.getId());
@@ -101,15 +100,14 @@ class VehicleServiceTest {
 	void mustUpdateTheVehicleSuccessfully() {
 		
 		Long id = vehicleService.findAll().get(0).getId();
+		Long companyId = companyRepository.findAll().get(0).getId();
 		
 		Vehicle vehicle = vehicleService.findById(id);
 		
 		assertNotEquals("MTJ-7577", vehicle.getPlate());
 		vehicle.setPlate("MTJ-7577");
 		
-		VehicleDTO vehicleDTO = new VehicleDTO(vehicle);
-		
-		Vehicle vehicleUpdated = vehicleService.update(vehicleDTO, id);
+		Vehicle vehicleUpdated = vehicleService.update(vehicle, companyId, id);
 		
 		assertEquals("MTJ-7577", vehicleUpdated.getPlate());
 	}
@@ -170,7 +168,7 @@ class VehicleServiceTest {
 		
 		var vehicleDTO = new VehicleDTO
 				("Chevrolet", "Unix", "Black", "ABC-1234", "Motobike", "Parked", companyId);
-		vehicleService.save(vehicleDTO);
+		vehicleService.save(new Vehicle(vehicleDTO), companyId);
 		
 		Long id = vehicleService.findAll().get(1).getId();
 		vehicleService.parkVehicle(id);

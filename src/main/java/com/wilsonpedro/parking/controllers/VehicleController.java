@@ -28,7 +28,7 @@ public class VehicleController {
 	
 	@PostMapping("/")
 	public ResponseEntity save(@RequestBody VehicleDTO vehicleDTO) {
-		Vehicle vehicleSaved = vehicleService.save(vehicleDTO);
+		var vehicleSaved = vehicleService.save(new Vehicle(vehicleDTO), vehicleDTO.getCompanyId());
 		VehicleDTO dtoSaved = new VehicleDTO(vehicleSaved);
 		return ResponseEntity.status(HttpStatus.CREATED).body(dtoSaved);
 	}
@@ -49,7 +49,8 @@ public class VehicleController {
 	
 	@PutMapping("/{id}")
 	public ResponseEntity update(@RequestBody VehicleDTO vehicleDTO, @PathVariable Long id) {
-		Vehicle vehicleUpdated = vehicleService.update(vehicleDTO, id);
+		Vehicle vehicleUpdated = vehicleService.update(
+				new Vehicle(vehicleDTO), vehicleDTO.getCompanyId(), id);
 		VehicleDTO dtoUpdated  = new VehicleDTO(vehicleUpdated);
 		return ResponseEntity.ok(dtoUpdated);
 	}

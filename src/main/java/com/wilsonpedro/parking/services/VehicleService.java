@@ -8,7 +8,6 @@ import org.springframework.stereotype.Service;
 
 import com.wilsonpedro.parking.dtos.RegisterDTO;
 import com.wilsonpedro.parking.dtos.Summary;
-import com.wilsonpedro.parking.dtos.VehicleDTO;
 import com.wilsonpedro.parking.enums.EntranceAndExit;
 import com.wilsonpedro.parking.enums.TypeVehicle;
 import com.wilsonpedro.parking.enums.VehicleStatus;
@@ -39,18 +38,17 @@ public class VehicleService {
 	private RegisterService registerService;
 	
 	@Transactional
-	public Vehicle save(VehicleDTO vehicleDTO) {
-		validatePlate(vehicleDTO.getPlate());
-		Vehicle vehicle = prepareToSave(vehicleDTO);
-		validateSpacesForParking(vehicleDTO.getCompanyId(), vehicle.getType());
+	public Vehicle save(Vehicle vehicle, Long companyId) {
+		validatePlate(vehicle.getPlate());
+		vehicle = prepareToSave(vehicle, companyId);
+		validateSpacesForParking(companyId, vehicle.getType());
 		companyService.addVehicleInVacantSpace(vehicle.getCompany().getId(), vehicle);
 		return vehicleRepository.save(vehicle);
 	}
 
 	@Transactional
-	private Vehicle prepareToSave(VehicleDTO vehicleDTO) {
-		Vehicle vehicle = new Vehicle(vehicleDTO);
-		Company company = companyRepository.findById(vehicleDTO.getCompanyId()).get();
+	private Vehicle prepareToSave(Vehicle vehicle, Long companyId) {
+		Company company = companyRepository.findById(companyId).get();
 		vehicle.setCompany(company);
 		vehicle.undefined();
 		return vehicle;
@@ -65,21 +63,21 @@ public class VehicleService {
 				.orElseThrow(() -> new NotFoundException(id));
 	}
 
-	public Vehicle update(VehicleDTO vehicleDTO, Long id) {
+	public Vehicle update(Vehicle vehicle, Long companyId, Long vehicleId) {
 		
-		Company company = companyRepository.findById(vehicleDTO.getCompanyId()).get();
+		Company company = companyRepository.findById(companyId).get();
 		
-		return vehicleRepository.findById(id)
+		return vehicleRepository.findById(vehicleId)
 				.map(vehicleUpdated -> {
-					vehicleUpdated.setId(id);
-					vehicleUpdated.setBrand(vehicleDTO.getBrand());
-					vehicleUpdated.setModel(vehicleDTO.getModel());
-					vehicleUpdated.setColor(vehicleDTO.getColor());
-					vehicleUpdated.setPlate(vehicleDTO.getPlate());
-					vehicleUpdated.setType(TypeVehicle.toEnum(vehicleDTO.getType()));
+					vehicleUpdated.setId(vehicleId);
+					vehicleUpdated.setBrand(vehicle.getBrand());
+					vehicleUpdated.setModel(vehicle.getModel());
+					vehicleUpdated.setColor(vehicle.getColor());
+					vehicleUpdated.setPlate(vehicle.getPlate());
+					vehicleUpdated.setType(vehicle.getType());
 					vehicleUpdated.setCompany(company);
 					return vehicleRepository.save(vehicleUpdated);
-				}).orElseThrow(() -> new NotFoundException(id));
+				}).orElseThrow(() -> new NotFoundException(vehicleId));
 	}
 	
 	@Transactional
